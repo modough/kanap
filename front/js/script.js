@@ -1,16 +1,15 @@
-let itemsData = [];
 
-const fetchItems = async () => {
-    await fetch("http://localhost:3000/api/products")
+const fetchItems = async (Url) => {
+    await fetch(Url)
     .then((res) => res.json())
-    .then((promise) => {
-        itemsData = promise;
+    .then((data) => {
+       displayItems(data);
            
     })    
 };
 
-const displayItems = async () => {
-    await fetchItems();
+const displayItems = (itemsData) => {
+    
     
     for (let i = 0; i < itemsData.length; i++) {
         let myItemId = document.createElement("a");
@@ -31,4 +30,4 @@ const displayItems = async () => {
     }    
 };
 
-displayItems();
+fetchItems("http://localhost:3000/api/products");
