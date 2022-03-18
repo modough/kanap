@@ -9,7 +9,7 @@ const fetchItems = async (Url) => {
 };
 
 const displayItems = (itemsData) => {
-    
+  
     
     for (let i = 0; i < itemsData.length; i++) {
         let myItemId = document.createElement("a");
@@ -26,7 +26,9 @@ const displayItems = (itemsData) => {
         myItemId.href = `./product.html?id=${itemsData[i]._id}`;
         myItemImage.src = itemsData[i].imageUrl;
         myItemName.textContent = itemsData[i].name;
-        myItemParagraph.textContent = itemsData[i].description
+        myItemName.className = 'productName';
+        myItemParagraph.textContent = itemsData[i].description;
+        myItemParagraph.className = 'productDescription';
     }    
 };
 
