@@ -6,6 +6,7 @@ const fetchItems = async (Url) => {
            
     })    
 };
+
 fetchItems("http://localhost:3000/api/products");
 
 const displayItemsInCart = (cartData) => {
@@ -20,13 +21,23 @@ const displayItemsInCart = (cartData) => {
 
     let myCartSection = document.getElementById("cart__items");
     myCartSection.appendChild(myCartItemArticle);
-    myCartItemArticle.appendChild(myCartItemImage, myCartItemName, myCartItemColor, myCartItemPrice, myCartItemQuantity, myCartItemdeleted);
+    let myCartItemImageDiv = document.createElement("div");
+    
+    let myCartItemNameColorDiv = document.createElement("div");
+    myCartItemArticle.appendChild(myCartItemImageDiv, myCartItemNameColorDiv, myCartItemQuantity, myCartItemdeleted);
+    myCartItemImageDiv.appendChild(myCartItemImage);
+   
+    myCartItemNameColorDiv.appendChild(myCartItemName, myCartItemColor, myCartItemPrice);
 
 
     myCartItemImage.src = cartData[i].imageUrl;
-    mycartItemName.textContent = cartData[i].name;
+    myCartItemName.textContent = cartData[i].name;
     myCartItemColor.textContent = cartData[i].colors;
     myCartItemPrice.textContent = cartData[i].price;
+    myCartItemArticle.className = "cart__item";
+    myCartItemImageDiv.className = "cart__item__img";
+    
+    myCartItemNameColorDiv.className = "cart__item__content__description";
 
 
 };
