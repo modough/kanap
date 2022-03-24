@@ -1,5 +1,5 @@
-const fetchElement = async () => {
-    await fetch(`http://localhost:3000/api/products/${elementId}`)
+const fetchElement = async (Url) => {
+    await fetch(Url)
     .then((res) => res.json())
     .then((data) => {
        displayElement(data);       
@@ -16,10 +16,6 @@ const displayElement = (elementData) => {
     let myElementcolor = document.getElementById("colors");
     let myElementQuantity = document.getElementById("quantity");
     
-    for(let i in elementData.colors){
-        myElementcolor.innerHTML += `<option>${elementData.colors[i]}</option>`;
-    };
-
     let myImgDiv = document.querySelector(".item__img");
     let myTitleDiv = document.querySelector(".item__content__titlePrice");
     let myDescriptionDiv = document.querySelector(".item__content__description");
@@ -35,7 +31,15 @@ const displayElement = (elementData) => {
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
     myElementPrice.textContent = elementData.price;
-    myElementDescription.textContent = elementData.description;        
+    myElementDescription.textContent = elementData.description;   
+    
+    elementData.colors.forEach((color) => {
+        let myColorOption = document.createElement("option");
+        myColorOption.innerHTML = `${color}`;
+        myColorOption.value = `${color}`;
+        myElementcolor.appendChild(myColorOption);
+        
+    });
 };
 
-fetchElement();
+fetchElement(`http://localhost:3000/api/products/${elementId}`);

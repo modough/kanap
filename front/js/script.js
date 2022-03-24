@@ -8,9 +8,7 @@ const fetchItems = async (Url) => {
     })    
 };
 
-const displayItems = (itemsData) => {
-  
-    
+const displayItems = (itemsData) => { 
     for (let i in itemsData) {
         let myItemId = document.createElement("a");
         let myItemArticle = document.createElement("article");
@@ -19,6 +17,7 @@ const displayItems = (itemsData) => {
         let myItemParagraph = document.createElement("p");
 
         let items = document.getElementById("items");
+
         items.append(myItemId);
         myItemId.append(myItemArticle);
         myItemArticle.append(myItemImage, myItemName, myItemParagraph);
