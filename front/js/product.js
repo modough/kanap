@@ -9,7 +9,7 @@ const fetchElement = async () => {
 let elementId = window.location.search.replace("?id=", "");
 
 const displayElement = (elementData) => {
-
+   
     let myElementImage = document.createElement("img");
     let myElementTitle = document.getElementById("title");
     let myElementPrice = document.getElementById("price")
@@ -19,8 +19,8 @@ const displayElement = (elementData) => {
     let myTitleDiv = document.querySelector(".item__content__titlePrice");
     let myDescriptionDiv = document.querySelector(".item__content__description");
     let colorSelect = document.getElementById("colors");
-    for(let i = 0; i<elementData.colors.length; i++){
-        colorSelect.innerHTML += `<option value="${elementData.colors[i]}">${elementData.colors[i]}</option>`;
+    for(let i in elementData.colors){
+        colorSelect.innerHTML += `<option>${elementData.colors[i]}</option>`;
     };
     let colorSelectDiv = document.querySelector(".item__content__settings__color");
     let myColorAndQuantityDiv = document.querySelector(".item__content__settings");

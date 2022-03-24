@@ -11,7 +11,7 @@ const fetchItems = async (Url) => {
 const displayItems = (itemsData) => {
   
     
-    for (let i = 0; i < itemsData.length; i++) {
+    for (let i in itemsData) {
         let myItemId = document.createElement("a");
         let myItemArticle = document.createElement("article");
         let myItemImage = document.createElement("img");
