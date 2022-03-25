@@ -9,12 +9,15 @@ const fetchElement = async (Url) => {
 let elementId = window.location.search.replace("?id=", "");
 
 const displayElement = (elementData) => {
+    
+
     let myElementImage = document.createElement("img");
     let myElementTitle = document.getElementById("title");
     let myElementPrice = document.getElementById("price")
     let myElementDescription = document.getElementById("description");
     let myElementcolor = document.getElementById("colors");
     let myElementQuantity = document.getElementById("quantity");
+    let myAddToCartButton = document.getElementById("addToCart");
     
     let myImgDiv = document.querySelector(".item__img");
     let myTitleDiv = document.querySelector(".item__content__titlePrice");
@@ -40,6 +43,31 @@ const displayElement = (elementData) => {
         myElementcolor.appendChild(myColorOption);
         
     });
+
+    for ( let i = 0; i < myElementQuantity.length; i+=1){
+        let input = myElementQuantity[i];
+        input.addEventlistener('change', quantityChanged);   
+    };
+
+    function quantityChanged(e) {
+        let input = e.target;
+        
+        if(isNaN(input.value) || input.value <= 0 || input.value > 100){
+            input.value = 1;
+            console.log(input.value)
+        }
+    };
+    
+    for (let i =0 ;i < myAddToCartButton; i+=1) {
+        let button = myAddToCartButton[i]
+        button.addEventlistener('click', addToCart)
+    }
+    function addToCart(e){
+        let button = e.target
+    }
+    
+
+    
 };
 
 fetchElement(`http://localhost:3000/api/products/${elementId}`);
