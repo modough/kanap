@@ -1,43 +1,60 @@
-const fetchItems = async (Url) => {
-    await fetch(Url)
-    .then((res) => res.json())
-    .then((data) => {
-       displayItemsInCart(data);
-           
-    })    
-};
-let elementId = window.location.search.replace("?id=", "");
-fetchItems(`http://localhost:3000/api/products/${elementId}`);
+let elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
+console.log(elementFromLocalStorage)
 
-const displayItemsInCart = (cartData) => {
-    let i=0; i<cartData.length; i++;
-    let myCartItemArticle = document.createElement("article");
-    let myCartItemImage = document.createElement("img");
-    let myCartItemName = document.createElement("h2");
-    let myCartItemColor = document.createElement("p");
-    let myCartItemPrice = document.createElement("p");
-    let myCartItemQuantity = document.createElement("p");
-    let myCartItemdeleted = document.createElement("p");
+const displayCartElement = async () => {
+    console.log("hello")
+    if(elementFromLocalStorage){
+        await elementFromLocalStorage
+        console.log("coucou")
 
-    let myCartSection = document.getElementById("cart__items");
-    myCartSection.appendChild(myCartItemArticle);
-    let myCartItemImageDiv = document.createElement("div");
-    
-    let myCartItemNameColorDiv = document.createElement("div");
-    myCartItemArticle.appendChild(myCartItemImageDiv, myCartItemNameColorDiv, myCartItemQuantity, myCartItemdeleted);
-    myCartItemImageDiv.appendChild(myCartItemImage);
-   
-    myCartItemNameColorDiv.appendChild(myCartItemName, myCartItemColor, myCartItemPrice);
+        let cartElementArticle = document.createElement("article")
+        let cartElementImage = document.createElement("img")
+        let cartElementName = document.createElement("h2")
+        let cartElementColor = document.createElement("p")
+        let cartElementPrice = document.createElement("p")
+        let cartQuantityText = document.createElement("p")
+        let cartQuantityInput = document.createElement("input")
+        let cartDeleteButton = document.createElement("p")
+        let cartElementImageDiv = document.createElement("div")
+        let cartElementContentDiv = document.createElement("div")
+        let cartElementContentDescriptionDiv = document.createElement("div")
+        let cartContentSettingDiv = document.createElement("div")
+        let cartContentSettingQuantityDiv = document.createElement("div")
+        let cartContentSettingDeleteDiv = document.createElement("div")
+
+        let cartElementSection = document.getElementById("cart__items")
+
+        cartElementSection.appendChild(cartElementArticle)
+        cartElementArticle.append(cartElementImageDiv, cartElementContentDiv, cartContentSettingDiv)
+        cartElementArticle.className = "cart__item"
+        cartElementImageDiv.appendChild(cartElementImage)
+        cartElementImageDiv.className = "cart__item__img"
+        cartElementContentDiv.append(cartElementContentDescriptionDiv)
+        cartElementContentDiv.className = "cart__item__content"
+        cartElementContentDescriptionDiv.append(cartElementName, cartElementColor, cartElementPrice)
+        cartElementContentDescriptionDiv.className = "cart__item__content__description"
+        cartContentSettingDiv.append(cartContentSettingQuantityDiv, cartContentSettingDeleteDiv)
+        cartContentSettingDiv.className ="cart__item__content__settings"
+        cartContentSettingQuantityDiv.append(cartQuantityText, cartQuantityInput)
+        cartContentSettingQuantityDiv.className = "cart__item__content__settings__quantity"
+        cartContentSettingDeleteDiv.append(cartDeleteButton)
+        cartContentSettingDeleteDiv.className = "cart__item__content__settings__delete"
+        cartDeleteButton.className = "deleteItem"
+
+        cartElementImage.src = elementFromLocalStorage.imageUrl
+        cartElementName.textContent = elementFromLocalStorage.name
+        cartElementColor.textContent = elementFromLocalStorage.colorSelected 
+        cartElementPrice.textContent = elementFromLocalStorage.cartElementPrice
+        cartQuantityInput.textContent = elementFromLocalStorage.quantity
 
 
-    myCartItemImage.src = cartData[i].imageUrl;
-    myCartItemName.textContent = cartData[i].name;
-    myCartItemColor.textContent = cartData[i].colors;
-    myCartItemPrice.textContent = cartData[i].price;
-    myCartItemArticle.className = "cart__item";
-    myCartItemImageDiv.className = "cart__item__img";
-    myCartItemNameColorDiv.className = "cart__item__content__description";
 
+    }else{
+        document.getElementById("addToCart").addEventListener("click",()=>{
+            alert("Veuillez ajoutez des produits au panier")
 
-};
+        })
+    }
+}
+displayCartElement()
 

@@ -53,7 +53,7 @@ const displayElement = (elementData) => {
             console.log(elementArray)
 
             const colorAndQuantitySelected = Object.assign({}, elementData,{
-                colorSected: `${select.value}`,
+                colorSelected: `${select.value}`,
                 quantity: 1
             })
             console.log(colorAndQuantitySelected)
