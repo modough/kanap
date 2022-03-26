@@ -63,8 +63,28 @@ const displayElement = (elementData) => {
                 elementArray.push(elementData)
                 console.log(elementArray)
                 localStorage.setItem("element",JSON.stringify(colorAndQuantitySelected))
+
+            }else if (elementArray != null){
+                for(let i in elementArray){
+                    console.log("test")
+                    
+                    if(elementArray[i]._id == elementData._id && 
+                        elementArray[i].colorSelected == select.value
+
+                        ){return(
+                            // on change juste la quantite
+                            elementArray[i].quantity++,
+                            console.log("quant"),
+                            localStorage.setItem("element", JSON.stringify(elementArray)),
+                            (elementArray = JSON.parse(localStorage.getItem("element")))
+                            
+                        )
+                    }
+                }
+
             }
         })
+        return (elementArray = JSON.parse(localStorage.getItem("element")))
     }
    addToCart(elementData)  
 };

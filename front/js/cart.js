@@ -27,6 +27,8 @@ const displayCartElement = async () => {
         cartElementSection.appendChild(cartElementArticle)
         cartElementArticle.append(cartElementImageDiv, cartElementContentDiv, cartContentSettingDiv)
         cartElementArticle.className = "cart__item"
+        cartElementArticle.setAttribute("data-id", elementFromLocalStorage._id)
+        cartElementArticle.setAttribute("data-color", elementFromLocalStorage.colorSelected)
         cartElementImageDiv.appendChild(cartElementImage)
         cartElementImageDiv.className = "cart__item__img"
         cartElementContentDiv.append(cartElementContentDescriptionDiv)
@@ -36,22 +38,26 @@ const displayCartElement = async () => {
         cartContentSettingDiv.append(cartContentSettingQuantityDiv, cartContentSettingDeleteDiv)
         cartContentSettingDiv.className ="cart__item__content__settings"
         cartContentSettingQuantityDiv.append(cartQuantityText, cartQuantityInput)
+        cartQuantityText.innerHTML = "Qté :"
         cartContentSettingQuantityDiv.className = "cart__item__content__settings__quantity"
         cartContentSettingDeleteDiv.append(cartDeleteButton)
         cartContentSettingDeleteDiv.className = "cart__item__content__settings__delete"
         cartDeleteButton.className = "deleteItem"
+        cartDeleteButton.innerHTML = "Supprimer"
 
         cartElementImage.src = elementFromLocalStorage.imageUrl
         cartElementName.textContent = elementFromLocalStorage.name
         cartElementColor.textContent = elementFromLocalStorage.colorSelected 
-        cartElementPrice.textContent = elementFromLocalStorage.cartElementPrice
-        cartQuantityInput.textContent = elementFromLocalStorage.quantity
+        cartElementPrice.innerHTML= elementFromLocalStorage.price + " "+"€"
+        cartQuantityInput.innerHTML = elementFromLocalStorage.quantity
 
+        let totalPrice = document.getElementById("totalPrice")
+        totalPrice.textContent = elementFromLocalStorage.price * elementFromLocalStorage.quantity
 
 
     }else{
         document.getElementById("addToCart").addEventListener("click",()=>{
-            alert("Veuillez ajoutez des produits au panier")
+            alert("Vous n'avez aucun article dans votre panier !")
 
         })
     }
