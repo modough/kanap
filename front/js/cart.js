@@ -6,8 +6,8 @@ const fetchItems = async (Url) => {
            
     })    
 };
-
-fetchItems("http://localhost:3000/api/products");
+let elementId = window.location.search.replace("?id=", "");
+fetchItems(`http://localhost:3000/api/products/${elementId}`);
 
 const displayItemsInCart = (cartData) => {
     let i=0; i<cartData.length; i++;
@@ -36,7 +36,6 @@ const displayItemsInCart = (cartData) => {
     myCartItemPrice.textContent = cartData[i].price;
     myCartItemArticle.className = "cart__item";
     myCartItemImageDiv.className = "cart__item__img";
-    
     myCartItemNameColorDiv.className = "cart__item__content__description";
 
 

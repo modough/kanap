@@ -9,6 +9,7 @@ const fetchItems = async (Url) => {
 };
 
 const displayItems = (itemsData) => { 
+    console.log(itemsData)
     for (let i in itemsData) {
         let myItemId = document.createElement("a");
         let myItemArticle = document.createElement("article");
