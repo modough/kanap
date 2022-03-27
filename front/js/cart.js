@@ -5,7 +5,7 @@ const displayCartElement = async () => {
     console.log("hello")
     if(elementFromLocalStorage){
         await elementFromLocalStorage
-        console.log("coucou")
+        console.log(elementFromLocalStorage)
 
         let cartElementArticle = document.createElement("article")
         let cartElementImage = document.createElement("img")

@@ -13,7 +13,7 @@ const displayElement = (elementData) => {
     let myElementTitle = document.getElementById("title");
     let myElementPrice = document.getElementById("price")
     let myElementDescription = document.getElementById("description");
-    let myElementcolor = document.getElementById("colors");
+    let myElementColor = document.getElementById("colors");
     let myElementQuantity = document.getElementById("quantity");
     let myAddToCartButton = document.getElementById("addToCart")
     
@@ -27,7 +27,7 @@ const displayElement = (elementData) => {
     myImgDiv.appendChild(myElementImage);
     myTitleDiv.appendChild(myElementTitle, myElementPrice);
     myDescriptionDiv.appendChild(myElementDescription);
-    myColorDiv.appendChild(myElementcolor);
+    myColorDiv.appendChild(myElementColor);
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
 
@@ -41,35 +41,35 @@ const displayElement = (elementData) => {
         let myColorOption = document.createElement("option");
         myColorOption.innerHTML = `${color}`;
         myColorOption.value = `${color}`;
-        myElementcolor.appendChild(myColorOption);
+        myElementColor.appendChild(myColorOption);
         
     });
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
             let elementArray = JSON.parse(localStorage.getItem("element"))
-            let select = document.getElementById("colors")
-            console.log(select)
+            myElementColor = document.getElementById("colors")
+            console.log(myElementColor)
             console.log(elementArray)
 
             const colorAndQuantitySelected = Object.assign({}, elementData,{
-                colorSelected: `${select.value}`,
+                colorSelected: `${myElementColor.value}`,
                 quantity: 1
             })
             console.log(colorAndQuantitySelected)
 
             if(elementArray == null){
                 elementArray = []
-                elementArray.push(elementData)
+                elementArray.push(colorAndQuantitySelected)
                 console.log(elementArray)
-                localStorage.setItem("element",JSON.stringify(colorAndQuantitySelected))
+                localStorage.setItem("element",JSON.stringify(elementArray))
 
             }else if (elementArray != null){
                 for(let i in elementArray){
                     console.log("test")
                     
                     if(elementArray[i]._id == elementData._id && 
-                        elementArray[i].colorSelected == select.value
+                        elementArray[i].colorSelected == myElementColor.value
 
                         ){return(
                             // on change juste la quantite
@@ -78,6 +78,20 @@ const displayElement = (elementData) => {
                             localStorage.setItem("element", JSON.stringify(elementArray)),
                             (elementArray = JSON.parse(localStorage.getItem("element")))
                             
+                        )
+                    }
+                }
+                for(let i in elementArray){
+                    if(elementArray[i]._id == elementData._id && 
+                        elementArray[i].colorSelected != myElementColor.value || 
+                        elementArray[i]._id != elementData._id
+                    ){
+                        return(
+                            console.log("nouveau"),
+                            elementArray.push(colorAndQuantitySelected),
+                            localStorage.setItem("element", JSON.stringify(elementArray)),
+                            (elementArray = JSON.parse(localStorage.getItem("element")))
+
                         )
                     }
                 }
