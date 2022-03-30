@@ -67,7 +67,6 @@ const displayElement = (elementData) => {
             }else if (elementArray != null){
                 for(let i in elementArray){
                     console.log("test")
-                    
                     if(elementArray[i]._id == elementData._id && 
                         elementArray[i].colorSelected == myElementColor.value
 
@@ -76,8 +75,7 @@ const displayElement = (elementData) => {
                             elementArray[i].quantity++,
                             console.log("quant"),
                             localStorage.setItem("element", JSON.stringify(elementArray)),
-                            (elementArray = JSON.parse(localStorage.getItem("element")))
-                            
+                            elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
                     }
                 }
@@ -89,20 +87,20 @@ const displayElement = (elementData) => {
                         return(
                             console.log("nouveau"),
                             elementArray.push(colorAndQuantitySelected),
-                            localStorage.setItem("element", JSON.stringify(elementArray)),
-                            (elementArray = JSON.parse(localStorage.getItem("element")))
-
+                            localStorage.setItem("element",JSON.stringify(elementArray)),
+                            elementArray = JSON.parse(localStorage.getItem("element"))
                         )
                     }
                 }
-
             }
         })
-        return (elementArray = JSON.parse(localStorage.getItem("element")))
+        return (
+            console.log("ok"),
+            elementArray = JSON.parse(localStorage.getItem("element"))
+        )
     }
    addToCart(elementData)  
-};
-
+}
 fetchElement(`http://localhost:3000/api/products/${elementId}`);
 
 
