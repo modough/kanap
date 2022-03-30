@@ -63,7 +63,7 @@ const displayCartElement = async() => {
 
            
         }
-        addQuantity()
+        changeQuantity()
         return
     }else{
         document.getElementById("addToCart").addEventListener("click",()=>{
@@ -74,39 +74,29 @@ const displayCartElement = async() => {
 displayCartElement()
 
 
-const addQuantity =async(displayCart) =>{
-    await displayCart
-    console.log("display++")
-    let addQuantityButton = document.querySelectorAll(".itemQuantity")
-    console.log(addQuantityButton)
-    addQuantityButton.forEach((moreQuantity)=>{
-        moreQuantity.addEventListener("click",()=>{
-            console.log(moreQuantity)
-            for(let i in elementFromLocalStorage){
-                if(elementFromLocalStorage[i]._id == moreQuantity.dataset.id && 
-                    elementFromLocalStorage[i].colorSelected == moreQuantity.dataset.color
-                )  {
-                    return elementFromLocalStorage[i].quantity++,
-                    console.log("quantity++"),
-                    localStorage.setItem("element",JSON.stringify(elementFromLocalStorage)),
-                    
-                    (document.querySelectorAll(".itemQuantity")[i].value = elementFromLocalStorage[i].quantity),
-                    (document.querySelectorAll(".cart__item__price")[i].textContent = 
-                    `${elementFromLocalStorage[i].quantity * elementFromLocalStorage[i].price}`)
 
-                }
-            }
-
+const changeQuantity = () =>{
+    let addQuantityButton = document.querySelectorAll(".itemQuantity");
+    addQuantityButton.forEach( (moreQuantity, index) => {
+        moreQuantity.addEventListener("change", (event) => {
+          event.preventDefault();
+          if(elementFromLocalStorage[index]._id === moreQuantity.dataset.id 
+             && elementFromLocalStorage[index].colorSelected === moreQuantity.dataset.color)  
+          {
+            return elementFromLocalStorage[index].quantity = moreQuantity.value,
             
-            
+            localStorage.setItem("element",JSON.stringify(elementFromLocalStorage)),
+            (document.querySelectorAll(".itemQuantity")[index].value = elementFromLocalStorage[index].quantity),
+            (document.querySelectorAll(".cart__item__price")[index].textContent = 
+            `${elementFromLocalStorage[index].quantity * elementFromLocalStorage[index].price}`),
+            (document.getElementById("totalQuantity").textContent = `${elementFromLocalStorage.price * elementFromLocalStorage.length}` )
+          }
         })
-        
     })
-
-    
-    
-    
 }
+
+
+
 
 
 
