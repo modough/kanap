@@ -2,7 +2,7 @@ let elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
 console.log(elementFromLocalStorage)
 
 const displayCartElement = async() => {
-    console.log("hello")
+    
     if(elementFromLocalStorage){
         await elementFromLocalStorage
         console.log(elementFromLocalStorage)
@@ -83,17 +83,34 @@ const changeQuantity = () =>{
           if(elementFromLocalStorage[index]._id === moreQuantity.dataset.id 
              && elementFromLocalStorage[index].colorSelected === moreQuantity.dataset.color)  
           {
-            return elementFromLocalStorage[index].quantity = moreQuantity.value,
+            return( elementFromLocalStorage[index].quantity = moreQuantity.value,
             
             localStorage.setItem("element",JSON.stringify(elementFromLocalStorage)),
-            (document.querySelectorAll(".itemQuantity")[index].value = elementFromLocalStorage[index].quantity),
-            (document.querySelectorAll(".cart__item__price")[index].textContent = 
-            `${elementFromLocalStorage[index].quantity * elementFromLocalStorage[index].price}`),
-            (document.getElementById("totalQuantity").textContent = `${elementFromLocalStorage.price * elementFromLocalStorage.length}` )
+            document.querySelectorAll(".itemQuantity")[index].value = elementFromLocalStorage[index].quantity),
+            document.getElementById("totalQuantity").innerHTML += elementFromLocalStorage.quantity
+           
           }
+         
         })
     })
 }
+function recalc() {
+    let cart = JSON.parse(localStorage.getItem("element"));
+    let quantity = 0;
+    let total = 0;
+    for (article of cart) {
+      quantity += parseInt(article.quantity);
+      total += parseFloat(article.price) * parseInt(article.quantity);
+    }
+    localStorage.setItem("element",JSON.stringify(cart)),
+    document.getElementById("totalQuantity").innerHTML = quantity;
+}
+recalc()   
+
+
+   
+
+
 
 
 

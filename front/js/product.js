@@ -73,7 +73,6 @@ const displayElement = (elementData) => {
                         ){return(
                             // on change juste la quantite
                             elementArray[i].quantity++,
-                            console.log("quant"),
                             localStorage.setItem("element", JSON.stringify(elementArray)),
                             elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
@@ -95,7 +94,7 @@ const displayElement = (elementData) => {
             }
         })
         return (
-            console.log("ok"),
+            
             elementArray = JSON.parse(localStorage.getItem("element"))
         )
     }
