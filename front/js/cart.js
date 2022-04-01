@@ -1,3 +1,5 @@
+let product = []
+//-------------------------------------------
 // retrieve data from ls
 let elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
 console.log(elementFromLocalStorage)
@@ -8,7 +10,7 @@ const displayCartElement = async() => {
         await elementFromLocalStorage
         console.log(elementFromLocalStorage)
         for(let i in elementFromLocalStorage){
-
+            //------------------------------------------------
             // creating elements
             let cartElementArticle = document.createElement("article")
             let cartElementImage = document.createElement("img")
@@ -54,7 +56,9 @@ const displayCartElement = async() => {
             cartContentSettingDeleteDiv.className = "cart__item__content__settings__delete"
             cartDeleteButton.className = "deleteItem"
             cartDeleteButton.innerHTML = "Supprimer"
-            
+            cartDeleteButton.setAttribute("data-id", elementFromLocalStorage[i]._id)
+            cartDeleteButton.setAttribute("data-color", elementFromLocalStorage[i].colorSelected)
+            //------------------------------------------------
             // set elements on matched div
             cartElementImage.src = elementFromLocalStorage[i].imageUrl
             cartElementName.textContent = elementFromLocalStorage[i].name
@@ -62,8 +66,9 @@ const displayCartElement = async() => {
             cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " "+"€"
             cartQuantityInput.value = elementFromLocalStorage[i].quantity      
         }
-
         changeQuantity() 
+        removeArticle()
+        
         return
     }else{
         document.getElementById("addToCart").addEventListener("click",()=>{
@@ -72,7 +77,7 @@ const displayCartElement = async() => {
     }
 }
 displayCartElement()
-
+//---------------------------------------------------------------
 // add or dim articles's quantity using up and down input arrow
 const changeQuantity = () =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity");
@@ -83,7 +88,7 @@ const changeQuantity = () =>{
         grandTotal()     
     })
 }
-
+//---------------------------------
 // display total articles in cart
 const grandTotal = () => {
     let totalQuantity = 0
@@ -96,6 +101,35 @@ const grandTotal = () => {
     document.querySelector("#totalPrice").innerHTML = totalPrice
     
 }
+const removeArticle = () =>{
+    
+    let removeArticleButton = document.querySelectorAll(".deleteItem")
+    console.log(removeArticleButton)
+    removeArticleButton.forEach((article)=>{
+        article.addEventListener("click", ()=>{
+            console.log(article)
+            let articleToRemove = elementFromLocalStorage.length
+            console.log(articleToRemove)
+            if(articleToRemove == 1) {
+                return localStorage.removeItem("element"),
+                console.log("remove")
+            }else{
+                product = elementFromLocalStorage.filter((element)=>{
+                    if(article.dataset.id != element._id || article.dataset.color != element.colorSelected){
+                        return true
+                    }
+                })
+                console.log(product)
+                localStorage.setItem("element", JSON.stringify(product))
+            }
+        })
+    })
+    return
+}
+
+
+
+
 
 
 

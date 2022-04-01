@@ -94,12 +94,44 @@ const displayElement = (elementData) => {
             }
         })
         return (
-            
-            elementArray = JSON.parse(localStorage.getItem("element"))
-        )
+            elementArray = JSON.parse(localStorage.getItem("element"))   
+        )   
     }
-   addToCart(elementData)  
+    addToCart(elementData) 
+
+    myAddToCartButton.addEventListener("click", () => {
+        // Fonction qui vérifie que les champ quantité et couleur sont bien renseigné
+        function invalidInput () {
+            if (elementData.color == "") {
+                console.log("wrong")
+                // on averti l'utilisateur que le champ doit être renseigné
+                new Swal({
+                title: "Veuillez choisir une couleur valide",
+                icon: "error",
+                iconColor: "#3498db",
+                showConfirmButton: false,
+                timer: 2000,
+                })
+            } else if (elementData.quantity == 0 || elementData.quantity == "") {
+                //on averti l'utilisateur que le champ doit être renseigné
+                new Swal({
+                title: "Veuillez choisir une quantité",
+                icon: "error",
+                iconColor: "#3498db",
+                showConfirmButton: false,
+                timer: 2000,
+                })
+            } 
+        }
+        invalidInput()     
+    })
+    
+
+   
+
+       
 }
-fetchElement(`http://localhost:3000/api/products/${elementId}`);
+fetchElement(`http://localhost:3000/api/products/${elementId}`)
+
 
 
