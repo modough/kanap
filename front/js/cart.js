@@ -1,3 +1,4 @@
+// retrieve data from ls
 let elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
 console.log(elementFromLocalStorage)
 
@@ -7,6 +8,8 @@ const displayCartElement = async() => {
         await elementFromLocalStorage
         console.log(elementFromLocalStorage)
         for(let i in elementFromLocalStorage){
+
+            // creating elements
             let cartElementArticle = document.createElement("article")
             let cartElementImage = document.createElement("img")
             let cartElementName = document.createElement("h2")
@@ -21,7 +24,6 @@ const displayCartElement = async() => {
             let cartContentSettingDiv = document.createElement("div")
             let cartContentSettingQuantityDiv = document.createElement("div")
             let cartContentSettingDeleteDiv = document.createElement("div")
-
             let cartElementSection = document.getElementById("cart__items")
 
             cartElementSection.appendChild(cartElementArticle)
@@ -52,18 +54,16 @@ const displayCartElement = async() => {
             cartContentSettingDeleteDiv.className = "cart__item__content__settings__delete"
             cartDeleteButton.className = "deleteItem"
             cartDeleteButton.innerHTML = "Supprimer"
-
+            
+            // set elements on matched div
             cartElementImage.src = elementFromLocalStorage[i].imageUrl
             cartElementName.textContent = elementFromLocalStorage[i].name
             cartElementColor.textContent = elementFromLocalStorage[i].colorSelected 
-            cartElementPrice.innerHTML= elementFromLocalStorage[i].price * elementFromLocalStorage[i].quantity + " "+"€"
-            cartQuantityInput.value = elementFromLocalStorage[i].quantity    
-
-           
-
-           
+            cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " "+"€"
+            cartQuantityInput.value = elementFromLocalStorage[i].quantity      
         }
-        changeQuantity()
+
+        changeQuantity() 
         return
     }else{
         document.getElementById("addToCart").addEventListener("click",()=>{
@@ -73,39 +73,38 @@ const displayCartElement = async() => {
 }
 displayCartElement()
 
-
-
+// add or dim articles's quantity using up and down input arrow
 const changeQuantity = () =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity");
     addQuantityButton.forEach( (moreQuantity, index) => {
-        moreQuantity.addEventListener("change", (event) => {
-          event.preventDefault();
-          if(elementFromLocalStorage[index]._id === moreQuantity.dataset.id 
-             && elementFromLocalStorage[index].colorSelected === moreQuantity.dataset.color)  
-          {
-            return( elementFromLocalStorage[index].quantity = moreQuantity.value,
-            
-            localStorage.setItem("element",JSON.stringify(elementFromLocalStorage)),
-            document.querySelectorAll(".itemQuantity")[index].value = elementFromLocalStorage[index].quantity),
-            document.getElementById("totalQuantity").innerHTML += elementFromLocalStorage.quantity
-           
-          }
-         
-        })
+        moreQuantity.addEventListener("change", (changeQuantity))    
+        elementFromLocalStorage[index].quantity = moreQuantity.value     
+        localStorage.setItem("element",JSON.stringify(elementFromLocalStorage))
+        grandTotal()     
     })
 }
-function recalc() {
-    let cart = JSON.parse(localStorage.getItem("element"));
-    let quantity = 0;
-    let total = 0;
-    for (article of cart) {
-      quantity += parseInt(article.quantity);
-      total += parseFloat(article.price) * parseInt(article.quantity);
+
+// display total articles in cart
+const grandTotal = () => {
+    let totalQuantity = 0
+    let totalPrice = 0
+    for (item of elementFromLocalStorage) {
+      totalQuantity += parseInt(item.quantity)
+      totalPrice += item.price * item.quantity
     }
-    localStorage.setItem("element",JSON.stringify(cart)),
-    document.getElementById("totalQuantity").innerHTML = quantity;
+    document.querySelector("#totalQuantity").innerHTML = totalQuantity
+    document.querySelector("#totalPrice").innerHTML = totalPrice
+    
 }
-recalc()   
+
+
+
+
+
+
+
+
+   
 
 
    
