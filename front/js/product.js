@@ -30,12 +30,15 @@ const displayElement = (elementData) => {
     myColorDiv.appendChild(myElementColor);
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
+    myElementQuantity.value = "1"
 
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
     myElementPrice.textContent = elementData.price;
     myElementDescription.textContent = elementData.description; 
-    myAddToCartButton.id = elementData._id  
+    myAddToCartButton.id = elementData._id 
+    
+    
     
     elementData.colors.forEach((color) => {
         let myColorOption = document.createElement("option");
@@ -53,7 +56,7 @@ const displayElement = (elementData) => {
             console.log(elementArray)
 
             const colorAndQuantitySelected = Object.assign({}, elementData,{
-                colorSelected: `${myElementColor.value}`,
+                color: `${myElementColor.value}`,
                 quantity: 1
             })
             console.log(colorAndQuantitySelected)
@@ -68,7 +71,7 @@ const displayElement = (elementData) => {
                 for(let i in elementArray){
                     console.log("test")
                     if(elementArray[i]._id == elementData._id && 
-                        elementArray[i].colorSelected == myElementColor.value
+                        elementArray[i].color == myElementColor.value
 
                         ){return(
                             // on change juste la quantite
@@ -80,7 +83,7 @@ const displayElement = (elementData) => {
                 }
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
-                        elementArray[i].colorSelected != myElementColor.value || 
+                        elementArray[i].color != myElementColor.value || 
                         elementArray[i]._id != elementData._id
                     ){
                         return(
@@ -88,6 +91,7 @@ const displayElement = (elementData) => {
                             elementArray.push(colorAndQuantitySelected),
                             localStorage.setItem("element",JSON.stringify(elementArray)),
                             elementArray = JSON.parse(localStorage.getItem("element"))
+                             
                         )
                     }
                 }
@@ -98,37 +102,6 @@ const displayElement = (elementData) => {
         )   
     }
     addToCart(elementData) 
-
-    myAddToCartButton.addEventListener("click", () => {
-        // Fonction qui vérifie que les champ quantité et couleur sont bien renseigné
-        function invalidInput () {
-            if (elementData.color == "") {
-                console.log("wrong")
-                // on averti l'utilisateur que le champ doit être renseigné
-                new Swal({
-                title: "Veuillez choisir une couleur valide",
-                icon: "error",
-                iconColor: "#3498db",
-                showConfirmButton: false,
-                timer: 2000,
-                })
-            } else if (elementData.quantity == 0 || elementData.quantity == "") {
-                //on averti l'utilisateur que le champ doit être renseigné
-                new Swal({
-                title: "Veuillez choisir une quantité",
-                icon: "error",
-                iconColor: "#3498db",
-                showConfirmButton: false,
-                timer: 2000,
-                })
-            } 
-        }
-        invalidInput()     
-    })
-    
-
-   
-
        
 }
 fetchElement(`http://localhost:3000/api/products/${elementId}`)
