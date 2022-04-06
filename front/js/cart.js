@@ -122,6 +122,68 @@ const removeArticle =  () =>{
 }
 displayCartElement()
 
+//----------------------------------------------
+/* Form Validation */
+
+let form = document.querySelector(".cart__order__form")
+
+form.firstName.addEventListener('change', ()=>{
+    validFirstName(this)
+})
+form.lastName.addEventListener('change', ()=>{
+    validlastName(this)
+})
+form.address.addEventListener('change', ()=>{
+    validAddress(this)
+})
+form.city.addEventListener('change', ()=>{
+    validCity(this)
+})
+form.email.addEventListener('change', ()=>{
+    validEmail(this)
+})
+
+const validFirstName = (firstNameInput)=>{
+    let firstNameRegExp = new RegExp(
+        '(^[a-zA-Z]$)', 'g'
+    )
+
+    
+    let errorMessage = document.getElementById("firstNameErrorMsg")
+    if(firstNameRegExp.test(firstNameInput.value)){
+        errorMessage.innerHTML = "Prénom valide"
+    }else{
+        errorMessage.innerHTML = "Prénom non valide"
+    }
+}
+
+const validlastName = (lastNameInput)=>{
+    let lastNameRegExp = new RegExp(
+        '^[a-zA-Z]$'
+    )
+
+    
+    let errorMessage = document.getElementById("lastNameErrorMsg")
+    if(lastNameRegExp.test(lastNameInput.value)){
+        errorMessage.innerHTML = "Nom valide"
+    }else{
+        errorMessage.innerHTML = "Nom non valide"
+    }
+}
+
+const validAddress = (addressInput)=>{
+    let addressRegExp = new RegExp(
+        '([0-9a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)', 'g'
+    )
+
+    
+    let errorMessage = document.getElementById("addressErrorMsg")
+    if(addressRegExp.test(addressInput.value)){
+        errorMessage.innerHTML = "Adresse valide"
+    }else{
+        errorMessage.innerHTML = "Adresse non valide"
+    }
+}
 
 
 
