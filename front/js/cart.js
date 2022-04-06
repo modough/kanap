@@ -1,10 +1,8 @@
 let product = []
 //-------------------------------------------
 // retrieve data from LS
-let elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
-console.log(elementFromLocalStorage)
-
 const displayCartElement = async() => {
+    const elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
     if(elementFromLocalStorage){
         await elementFromLocalStorage
         for(let i in elementFromLocalStorage){
@@ -18,6 +16,7 @@ const displayCartElement = async() => {
             let cartQuantityText = document.createElement("p")
             let cartQuantityInput = document.createElement("input")
             let cartDeleteButton = document.createElement("p")
+
             let cartElementImageDiv = document.createElement("div")
             let cartElementContentDiv = document.createElement("div")
             let cartElementContentDescriptionDiv = document.createElement("div")
@@ -29,6 +28,7 @@ const displayCartElement = async() => {
             cartElementSection.appendChild(cartElementArticle)
             cartElementArticle.append(cartElementImageDiv, cartElementContentDiv, cartContentSettingDiv)
             cartElementArticle.className = "cart__item"
+            cartElementArticle.id = "cart__item"
             cartElementImageDiv.appendChild(cartElementImage)
             cartElementImageDiv.className = "cart__item__img"
             cartElementContentDiv.append(cartElementContentDescriptionDiv, cartContentSettingDiv)
@@ -54,6 +54,7 @@ const displayCartElement = async() => {
             cartDeleteButton.innerHTML = "Supprimer"
             cartDeleteButton.setAttribute("data-id", elementFromLocalStorage[i]._id)
             cartDeleteButton.setAttribute("data-color", elementFromLocalStorage[i].color)
+           
             //------------------------------------------------
             // set elements on matched div
             cartElementImage.src = elementFromLocalStorage[i].imageUrl
@@ -61,67 +62,77 @@ const displayCartElement = async() => {
             cartElementColor.innerHTML = elementFromLocalStorage[i].color
             cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " "+"€"
             cartQuantityInput.value = elementFromLocalStorage[i].quantity      
-        }
-        changeQuantity() 
-        removeArticle()
-        return
-    }
+        } 
+        grandTotal(elementFromLocalStorage)   
+        changeQuantity(elementFromLocalStorage) 
+        removeArticle(elementFromLocalStorage)  
+    }   
 }
-displayCartElement()
 //---------------------------------------------------------------
 // add or dim articles's quantity using up and down input arrow
 const changeQuantity = () =>{
-    let addQuantityButton = document.querySelectorAll(".itemQuantity");
+    let addQuantityButton = document.querySelectorAll(".itemQuantity")
     addQuantityButton.forEach( (moreQuantity, index) => {
-        moreQuantity.addEventListener("change", (changeQuantity))    
-        elementFromLocalStorage[index].quantity = moreQuantity.value     
-        localStorage.setItem("element",JSON.stringify(elementFromLocalStorage))
-        grandTotal()     
+        moreQuantity.addEventListener("change", async()=>{
+            const articlesFromLocalStorage = await JSON.parse(localStorage.getItem("element"))
+            articlesFromLocalStorage[index].quantity = moreQuantity.value     
+            localStorage.setItem("element",JSON.stringify(articlesFromLocalStorage))
+            grandTotal(articlesFromLocalStorage)
+        })                   
     })
 }
 //---------------------------------
 // display total articles in cart
-const grandTotal = () => {
+const grandTotal = (articles) => {
     let totalQuantity = 0
     let totalPrice = 0
-    for (item of elementFromLocalStorage) {
+    for (item of articles) {
       totalQuantity += parseInt(item.quantity)
       totalPrice += item.price * item.quantity
     }
     document.querySelector("#totalQuantity").innerHTML = totalQuantity
-    document.querySelector("#totalPrice").innerHTML = totalPrice    
+    document.querySelector("#totalPrice").innerHTML = totalPrice         
 }
 //-----------------------------------------
 //remove articles from cart
-const removeArticle = () =>{
+const removeArticle =  () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
     console.log(removeArticleButton)
-    removeArticleButton.forEach((article)=>{
-        article.addEventListener("click", ()=>{
-            console.log(article)
-            let articleToRemove = elementFromLocalStorage.length
-            console.log(articleToRemove)
-            if(articleToRemove == 1) {
-                return product.splice(0,1),
-                localStorage.setItem("element", JSON.stringify(product)),
-
-                console.log("remove all")
-            }else{
-                product = elementFromLocalStorage.filter(element => {
-                    if(article.dataset.id != element._id || article.dataset.color != element.color){
-                        return true   
-                    }
-                })
-                console.log(product) 
-                localStorage.setItem("element", JSON.stringify(product)) 
-                product = JSON.parse(localStorage.getItem("element"))
-                product = document.querySelectorAll(".cart__item")
-                console.log("remove the clicked article")    
-            }        
-        })  
+    removeArticleButton.forEach((btn)=>{
+        btn.addEventListener("click", async ()=>{
+            alert("Article supprimé")
+            console.log(btn)
+            
+            const articlesFromLocalStorage = await JSON.parse(localStorage.getItem("element"))
+            product = articlesFromLocalStorage.filter(element => {
+                if(btn.dataset.id != element._id || btn.dataset.color != element.color){
+                    return true   
+                }
+            })
+            console.log(product)  
+            console.log("remove the clicked article")   
+            btn.closest("article").remove()
+            localStorage.setItem("element", JSON.stringify(product))
+            
+            changeQuantity()
+            grandTotal(product)           
+        })       
     })
-    return
-}    
+    return 
+}
+displayCartElement()
+
+
+
+
+
+
+
+
+
+
+
+   
 
     
 

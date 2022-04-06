@@ -50,6 +50,7 @@ const displayElement = (elementData) => {
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
+            alert("Article ajouté au panier")
             let elementArray = JSON.parse(localStorage.getItem("element"))
             myElementColor = document.getElementById("colors")
             console.log(myElementColor)
@@ -96,6 +97,7 @@ const displayElement = (elementData) => {
                     }
                 }
             }
+               
         })
         return (
             elementArray = JSON.parse(localStorage.getItem("element"))   
