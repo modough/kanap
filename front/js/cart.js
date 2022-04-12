@@ -1,10 +1,9 @@
-let product = []
 //-------------------------------------------
 // retrieve data from LS
-const displayCartElement = async() => {
+const displayCartElement = () => {
     const elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
     if(elementFromLocalStorage){
-        await elementFromLocalStorage
+        
         for(let i in elementFromLocalStorage){
             //------------------------------------------------
             // creating elements
@@ -73,8 +72,8 @@ const displayCartElement = async() => {
 const changeQuantity = () =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity")
     addQuantityButton.forEach( (moreQuantity, index) => {
-        moreQuantity.addEventListener("change", async()=>{
-            const articlesFromLocalStorage = await JSON.parse(localStorage.getItem("element"))
+        moreQuantity.addEventListener("change", ()=>{
+            const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
             articlesFromLocalStorage[index].quantity = moreQuantity.value     
             localStorage.setItem("element",JSON.stringify(articlesFromLocalStorage))
             grandTotal(articlesFromLocalStorage)
@@ -95,15 +94,16 @@ const grandTotal = (articles) => {
 }
 //-----------------------------------------
 //remove articles from cart
+let products = []
 const removeArticle =  () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
     console.log(removeArticleButton)
     removeArticleButton.forEach((btn)=>{
-        btn.addEventListener("click", async ()=>{
+        btn.addEventListener("click", ()=>{
             alert("Article supprimé")
             console.log(btn)
             
-            const articlesFromLocalStorage = await JSON.parse(localStorage.getItem("element"))
+            const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
             product = articlesFromLocalStorage.filter(element => {
                 if(btn.dataset.id != element._id || btn.dataset.color != element.color){
                     return true   
@@ -112,10 +112,10 @@ const removeArticle =  () =>{
             console.log(product)  
             console.log("remove the clicked article")   
             btn.closest("article").remove()
-            localStorage.setItem("element", JSON.stringify(product))
+            localStorage.setItem("element", JSON.stringify(products))
             
             changeQuantity()
-            grandTotal(product)           
+            grandTotal(products)           
         })       
     })
     return 
@@ -125,65 +125,117 @@ displayCartElement()
 //----------------------------------------------
 /* Form Validation */
 
-let form = document.querySelector(".cart__order__form")
 
-form.firstName.addEventListener('change', ()=>{
-    validFirstName(this)
-})
-form.lastName.addEventListener('change', ()=>{
-    validlastName(this)
-})
-form.address.addEventListener('change', ()=>{
-    validAddress(this)
-})
-form.city.addEventListener('change', ()=>{
-    validCity(this)
-})
-form.email.addEventListener('change', ()=>{
-    validEmail(this)
-})
+const contact = ()=>{
+
+    let form = document.querySelector(".cart__order__form")
+
+    form.firstName.addEventListener('change', ()=>{
+        validFirstName(this)
+    })
+    form.lastName.addEventListener('change', ()=>{
+        validlastName(this)
+    })
+    form.address.addEventListener('change', ()=>{
+        validAddress(this)
+    })
+    form.city.addEventListener('change', ()=>{
+        validCity(this)
+    })
+    form.email.addEventListener('change', ()=>{
+        validEmail(this) 
+         
+    })
+    
+    console.log(form)
+}
+
+
 
 const validFirstName = (firstNameInput)=>{
-    let firstNameRegExp = new RegExp(
-        '(^[a-zA-Z]$)', 'g'
-    )
-
-    
     let errorMessage = document.getElementById("firstNameErrorMsg")
-    if(firstNameRegExp.test(firstNameInput.value)){
-        errorMessage.innerHTML = "Prénom valide"
+    firstNameInput = document.getElementById("firstName").value
+    if(!isNaN(firstNameInput)){
+        errorMessage.innerHTML = "Non valide"
+        console.log(firstNameInput)
     }else{
-        errorMessage.innerHTML = "Prénom non valide"
+        errorMessage.innerHTML = ""
     }
+    console.log(firstNameInput)
 }
 
 const validlastName = (lastNameInput)=>{
-    let lastNameRegExp = new RegExp(
-        '^[a-zA-Z]$'
-    )
-
-    
+    lastNameInput = document.getElementById("lastName").value
     let errorMessage = document.getElementById("lastNameErrorMsg")
-    if(lastNameRegExp.test(lastNameInput.value)){
-        errorMessage.innerHTML = "Nom valide"
+    if(!isNaN(lastNameInput)){
+        errorMessage.innerHTML = "Non valide"
     }else{
-        errorMessage.innerHTML = "Nom non valide"
+        errorMessage.innerHTML = ""    
     }
 }
 
 const validAddress = (addressInput)=>{
-    let addressRegExp = new RegExp(
-        '([0-9a-zA-Z,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)', 'g'
-    )
-
-    
+    addressInput = document.getElementById("address").value
     let errorMessage = document.getElementById("addressErrorMsg")
-    if(addressRegExp.test(addressInput.value)){
-        errorMessage.innerHTML = "Adresse valide"
+    if(addressInput.length >10){
+        errorMessage.innerHTML = ""
     }else{
-        errorMessage.innerHTML = "Adresse non valide"
+        errorMessage.innerHTML = "Veuillez renseigner une adresse valide"
     }
 }
+
+const validCity = (cityInput)=>{
+    cityInput = document.getElementById("city").value
+    let errorMessage = document.getElementById("cityErrorMsg")
+    
+    if(cityInput.length <= 1){
+        errorMessage.innerHTML = "Non valide"
+        console.log(cityInput)
+    }else{
+        errorMessage.innerHTML = ""
+    }
+}
+
+const validEmail = (emailInput)=>{
+    emailInput = document.getElementById("email").value
+    let regexEmailInput = new RegExp(/\S+@\S+\.\S+/).test(emailInput)
+    let errorMessage = document.getElementById("emailErrorMsg")
+    if(regexEmailInput){
+        errorMessage.innerHTML = ""
+    }else{
+        errorMessage.innerHTML = "Non valide"
+    }
+}
+
+
+
+
+let order = document.getElementById("order")
+order.addEventListener("click", ()=>{
+    order.innerHTML = "Commande validée"
+    order.style.color = "lightgreen"
+    let orderId = document.getElementById("orderId")
+    fetch("http://localhost:3000/api/products/order",{
+            method: "POST",
+            body: JSON.stringify(contact(), {products}),
+            Headers: {"content-type": "application/json"}
+        }) 
+        .then((res)=>res.json())  
+        .then((data)=>{
+            return orderId = data.order
+        })  
+    console.log(contact)
+    alert("Commande envoyée")
+    localStorage.clear()
+
+    location.href = "confirmation.html?" + orderId + "#orderId"  
+})
+
+
+
+
+
+
 
 
 

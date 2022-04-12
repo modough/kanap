@@ -31,6 +31,7 @@ const displayElement = (elementData) => {
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
     myElementQuantity.value = "1"
+    myElementColor.value != ""
 
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
@@ -50,7 +51,8 @@ const displayElement = (elementData) => {
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
-            alert("Article ajouté au panier")
+            myAddToCartButton.innerHTML = "Article ajoutée"    
+            myAddToCartButton.style.color = "lightgreen"
             let elementArray = JSON.parse(localStorage.getItem("element"))
             myElementColor = document.getElementById("colors")
             console.log(myElementColor)
