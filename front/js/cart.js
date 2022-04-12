@@ -104,12 +104,12 @@ const removeArticle =  () =>{
             console.log(btn)
             
             const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
-            product = articlesFromLocalStorage.filter(element => {
+            products = articlesFromLocalStorage.filter(element => {
                 if(btn.dataset.id != element._id || btn.dataset.color != element.color){
                     return true   
                 }
             })
-            console.log(product)  
+            console.log(products)  
             console.log("remove the clicked article")   
             btn.closest("article").remove()
             localStorage.setItem("element", JSON.stringify(products))
@@ -126,32 +126,35 @@ displayCartElement()
 /* Form Validation */
 
 
-const contact = ()=>{
 
-    let form = document.querySelector(".cart__order__form")
 
-    form.firstName.addEventListener('change', ()=>{
-        validFirstName(this)
-    })
-    form.lastName.addEventListener('change', ()=>{
-        validlastName(this)
-    })
-    form.address.addEventListener('change', ()=>{
-        validAddress(this)
-    })
-    form.city.addEventListener('change', ()=>{
-        validCity(this)
-    })
-    form.email.addEventListener('change', ()=>{
-        validEmail(this) 
-         
-    })
+let form = document.querySelector(".cart__order__form")
+
+form.firstName.addEventListener('change', ()=>{
+    validFirstName()
     
-    console.log(form)
-}
+})
+form.lastName.addEventListener('change', ()=>{
+    validlastName(this)
+    
+})
+form.address.addEventListener('change', ()=>{
+    validAddress(this)
+    
+})
+form.city.addEventListener('change', ()=>{
+    validCity(this)
+    
+})
+form.email.addEventListener('change', (e)=>{
+    validEmail(this) 
+    
+        
+})
 
 
 
+let firstNameInput = document.getElementById("firstName").value
 const validFirstName = (firstNameInput)=>{
     let errorMessage = document.getElementById("firstNameErrorMsg")
     firstNameInput = document.getElementById("firstName").value
@@ -163,7 +166,7 @@ const validFirstName = (firstNameInput)=>{
     }
     console.log(firstNameInput)
 }
-
+let lastNameInput = document.getElementById("lastName").value
 const validlastName = (lastNameInput)=>{
     lastNameInput = document.getElementById("lastName").value
     let errorMessage = document.getElementById("lastNameErrorMsg")
@@ -173,17 +176,17 @@ const validlastName = (lastNameInput)=>{
         errorMessage.innerHTML = ""    
     }
 }
-
+let addressInput = document.getElementById("address").value
 const validAddress = (addressInput)=>{
     addressInput = document.getElementById("address").value
     let errorMessage = document.getElementById("addressErrorMsg")
-    if(addressInput.length >10){
+    if(addressInput.length > 10){
         errorMessage.innerHTML = ""
     }else{
         errorMessage.innerHTML = "Veuillez renseigner une adresse valide"
     }
 }
-
+let cityInput = document.getElementById("city").value
 const validCity = (cityInput)=>{
     cityInput = document.getElementById("city").value
     let errorMessage = document.getElementById("cityErrorMsg")
@@ -195,7 +198,7 @@ const validCity = (cityInput)=>{
         errorMessage.innerHTML = ""
     }
 }
-
+let emailInput = document.getElementById("email").value
 const validEmail = (emailInput)=>{
     emailInput = document.getElementById("email").value
     let regexEmailInput = new RegExp(/\S+@\S+\.\S+/).test(emailInput)
@@ -207,17 +210,42 @@ const validEmail = (emailInput)=>{
     }
 }
 
+let contact = {
+    firstName: firstNameInput,
+    lastName: lastNameInput,
+    address: addressInput,
+    city: cityInput,
+    email: emailInput
+}
+let orderId = document.getElementById("orderId")
+
+orderId = window.location.search.replace("?", "")
+let orderBtn = document.getElementById("order").addEventListener("click", (e)=>{
+    e.preventDefault()
+    fetch("http://localhost:3000/api/products/order", {
+        method: "POST",
+        body: JSON.stringify({contact, products}),
+        Headers: {"content-type": "application/json"}   
+    })
+    .then((res)=>res.json())  
+    .then((data)=>{
+        localStorage.setItem("orderId", data.orderId)
+        location.href = "confirmation.html" + orderId + "#orderId"
+    })  
+
+})
 
 
-
+/*let orderId = undefined
 let order = document.getElementById("order")
 order.addEventListener("click", ()=>{
-    order.innerHTML = "Commande validée"
+    order.textContent = "Commande validée"
     order.style.color = "lightgreen"
-    let orderId = document.getElementById("orderId")
+    document.getElementById("orderId").innerHTML = orderId
+    orderId = window.location.search.replace("?", "")
     fetch("http://localhost:3000/api/products/order",{
             method: "POST",
-            body: JSON.stringify(contact(), {products}),
+            body: JSON.stringify({contact, products}),
             Headers: {"content-type": "application/json"}
         }) 
         .then((res)=>res.json())  
@@ -229,7 +257,7 @@ order.addEventListener("click", ()=>{
     localStorage.clear()
 
     location.href = "confirmation.html?" + orderId + "#orderId"  
-})
+})*/
 
 
 

@@ -1,5 +1,5 @@
-const fetchElement = async (Url) => {
-    await fetch(Url)
+const fetchElement = (Url) => {
+    fetch(Url)
     .then((res) => res.json())
     .then((data) => {
        displayElement(data);       
