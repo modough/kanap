@@ -31,7 +31,7 @@ const displayElement = (elementData) => {
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
     myElementQuantity.value = "1"
-    myElementColor.value != ""
+    
 
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
@@ -64,8 +64,8 @@ const displayElement = (elementData) => {
             })
             console.log(colorAndQuantitySelected)
 
-            if(elementArray == null){
-                elementArray = []
+            if(quantity.value != 0 && quantity.value <= 100){
+                
                 elementArray.push(colorAndQuantitySelected)
                 console.log(elementArray)
                 localStorage.setItem("element",JSON.stringify(elementArray))
@@ -87,7 +87,7 @@ const displayElement = (elementData) => {
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
                         elementArray[i].color != myElementColor.value || 
-                        elementArray[i]._id != elementData._id
+                        elementArray[i]._id != elementData._id && elementArray[i].color != ""
                     ){
                         return(
                             console.log("nouveau"),

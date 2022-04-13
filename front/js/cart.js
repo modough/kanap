@@ -94,7 +94,7 @@ const grandTotal = (articles) => {
 }
 //-----------------------------------------
 //remove articles from cart
-let products = []
+let product = []
 const removeArticle =  () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
     console.log(removeArticleButton)
@@ -104,18 +104,18 @@ const removeArticle =  () =>{
             console.log(btn)
             
             const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
-            products = articlesFromLocalStorage.filter(element => {
+            product = articlesFromLocalStorage.filter(element => {
                 if(btn.dataset.id != element._id || btn.dataset.color != element.color){
                     return true   
                 }
             })
-            console.log(products)  
+            console.log(product)  
             console.log("remove the clicked article")   
             btn.closest("article").remove()
-            localStorage.setItem("element", JSON.stringify(products))
+            localStorage.setItem("element", JSON.stringify(product))
             
             changeQuantity()
-            grandTotal(products)           
+            grandTotal(product)           
         })       
     })
     return 
@@ -127,8 +127,196 @@ displayCartElement()
 
 
 
+function Form() {
 
-let form = document.querySelector(".cart__order__form")
+    let inputs = document.querySelectorAll("input");
+  
+    // errors
+  
+    const errorMessage = (tag, message, valid) => {
+      const showErrorMessage = document.querySelector("#" + tag + "ErrorMsg");
+      if (!valid) {
+        showErrorMessage.textContent = message;
+      } else {
+        showErrorMessage.textContent = "";
+      }
+    };
+  
+    // Validation des champs via comparaison Regex
+  
+    const firstNameChecker = (value) => {
+      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
+        errorMessage(
+          "firstName",
+          "Le prénom doit contenir entre 2 et 20 caractères"
+        );
+        firstName = null;
+      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
+        errorMessage(
+          "firstName",
+          "Le prénom ne doit pas contenir de caractères spéciaux"
+        );
+        firstName = null;
+      } else {
+        errorMessage("firstName", "", true);
+        firstName = value;
+      }
+    };
+  
+    const lastNameChecker = (value) => {
+      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
+        errorMessage(
+          "lastName",
+          "Le nom de famille doit contenir entre 2 et 20 caractères"
+        );
+        lastName = null;
+      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
+        errorMessage(
+          "lastName",
+          "Le nom de famille ne doit pas contenir de caractères spéciaux"
+        );
+        lastName = null;
+      } else {
+        errorMessage("lastName", "", true);
+        lastName = value;
+      }
+    };
+  
+    const addressChecker = (value) => {
+      if (value.length > 0 && (value.length < 2 || value.length > 50)) {
+        errorMessage(
+          "address",
+          "L'adresse doit contenir entre 2 et 20 caractères"
+        );
+        address = null
+      }else {
+        errorMessage("address", "", true)
+        address = value
+      }
+    }
+  
+    const cityChecker = (value) => {
+      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
+        errorMessage(
+          "city",
+          "Le nom de la ville doit contenir entre 2 et 20 caractères"
+        );
+        city = null
+      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
+        errorMessage(
+          "city",
+          "Le nom de la ville ne doit pas contenir de caractères spéciaux"
+        );
+        city = null;
+      } else {
+        errorMessage("city", "", true);
+        city = value;
+      }
+    };
+  
+    const emailChecker = (value) => {
+      if (!value.match(/^[\w._-]+@[\w-]+\.[a-z]{2,4}$/i)) {
+        errorMessage("email", "Le mail n'est pas valide");
+        email = null;
+      } else {
+        errorMessage("email", "", true);
+        email = value;
+      }
+    };
+  
+    // Ecoute des champs du formulaire
+  
+    inputs.forEach((input) => {
+      input.addEventListener("input", (e) => {
+        switch (e.target.id) {
+          case "firstName":
+            firstNameChecker(e.target.value);
+  
+            break;
+          case "lastName":
+            lastNameChecker(e.target.value);
+  
+            break;
+          case "address":
+            addressChecker(e.target.value);
+  
+            break;
+          case "city":
+            cityChecker(e.target.value);
+  
+            break;
+          case "email":
+            emailChecker(e.target.value);
+          default:
+            null;
+        }
+      });
+    });
+}
+Form();
+  
+// Envoi d'une requête POST à l'API
+  
+const sendForm = () => {
+   const orderBtn = document.getElementById("order");
+
+    //Ecouter le bouton submit
+
+    orderBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        if (product !== null) {
+            let orderProducts = [];
+            for (let i in product) {
+                orderProducts.push(product[i].userProductId);
+            }
+
+            // Construction des elements à envoyer
+
+            if (firstName && lastName && address && city && email) {
+                let contact = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    address: address,
+                    city: city,
+                    email: email
+                }
+
+                let products = orderProducts
+                
+                
+                // Requête POST
+
+              
+                fetch("http://localhost:3000/api/products/order", {
+                    method: "POST",
+                    body: JSON.stringify({contact, products}),
+                    headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                    }
+                })
+                .then((res) => res.json())
+                .then((data) => {
+                    // Renvoi de l'orderID dans l'URL
+                    document.location.href = "confirmation.html?id=" + data.orderId;
+                })
+                .catch(function (err) {
+                    console.log("Erreur fetch" + err);
+                })
+            } 
+            else {
+                alert("Veuillez renseigner le formulaire");
+            }
+
+        }
+    })
+}
+sendForm();
+
+
+
+/*let form = document.querySelector(".cart__order__form")
 
 form.firstName.addEventListener('change', ()=>{
     validFirstName()
@@ -217,9 +405,9 @@ let contact = {
     city: cityInput,
     email: emailInput
 }
-let orderId = document.getElementById("orderId")
 
-orderId = window.location.search.replace("?", "")
+
+
 let orderBtn = document.getElementById("order").addEventListener("click", (e)=>{
     e.preventDefault()
     fetch("http://localhost:3000/api/products/order", {
@@ -229,11 +417,11 @@ let orderBtn = document.getElementById("order").addEventListener("click", (e)=>{
     })
     .then((res)=>res.json())  
     .then((data)=>{
-        localStorage.setItem("orderId", data.orderId)
-        location.href = "confirmation.html" + orderId + "#orderId"
+        
+        document.location.href = "confirmation.html?id=" + data.orderId
     })  
 
-})
+})*/
 
 
 /*let orderId = undefined
