@@ -196,7 +196,7 @@ Form()
 
 
 //------------------------------------------------- 
-// Starting sending Process   
+// Start sending Process   
 const sendForm = () => {
    const orderBtn = document.getElementById("order")
     orderBtn.addEventListener("click", (e) => {
@@ -208,7 +208,7 @@ const sendForm = () => {
                 orderProducts.push(product[i]._id)
             }
             //------------------------------------------------------
-            // build sending elements
+            // build elements to send
             let contact = {
                 firstName: firstName,
                 lastName: lastName,
@@ -217,8 +217,9 @@ const sendForm = () => {
                 email: email
             }
             let products = orderProducts
+           
             //----------------------------------------------------
-            //  sending the elements
+            //  sending elements
             fetch("http://localhost:3000/api/products/order", {
                 method: "POST",
                 body: JSON.stringify({contact, products}),
@@ -230,7 +231,7 @@ const sendForm = () => {
             .then((res) => res.json())
             .then((data) => {
                 // add orderId in url
-                document.location.href = "confirmation.html?id=" + data.orderId;
+                document.location.href = "confirmation.html?id=" + data.orderId
             })
             .catch()
         }

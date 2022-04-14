@@ -31,7 +31,7 @@ const displayElement = (elementData) => {
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
     myElementQuantity.value = "1"
-    myElementColor.value != ""
+    
 
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
