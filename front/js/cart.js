@@ -81,7 +81,7 @@ const changeQuantity = () =>{
     })
 }
 //---------------------------------
-// display total articles in cart
+// Display total articles in cart
 const grandTotal = (articles) => {
     let totalQuantity = 0
     let totalPrice = 0
@@ -93,7 +93,7 @@ const grandTotal = (articles) => {
     document.querySelector("#totalPrice").innerHTML = totalPrice         
 }
 //-----------------------------------------
-//remove articles from cart
+//Remove articles from cart
 let product = []
 const removeArticle =  () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
@@ -123,16 +123,12 @@ const removeArticle =  () =>{
 displayCartElement()
 
 //----------------------------------------------
-/* Form Validation */
-
-
-
+/* Form  */
 function Form() {
 
     let inputs = document.querySelectorAll("input");
-  
-    // errors
-  
+    //---------------------------------------------------------
+    // Errors
     const errorMessage = (tag, message, valid) => {
       const showErrorMessage = document.querySelector("#" + tag + "ErrorMsg");
       if (!valid) {
@@ -141,20 +137,19 @@ function Form() {
         showErrorMessage.textContent = "";
       }
     };
-  
-    // Validation des champs via comparaison Regex
-  
-    const firstNameChecker = (value) => {
+    //------------------------------------------------------
+    // Validation 
+    const firstNameInput = (value) => {
       if (value.length > 0 && (value.length < 2 || value.length > 20)) {
         errorMessage(
           "firstName",
-          "Le prénom doit contenir entre 2 et 20 caractères"
+          "Non valide"
         );
         firstName = null;
       } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
         errorMessage(
           "firstName",
-          "Le prénom ne doit pas contenir de caractères spéciaux"
+          "Non valide"
         );
         firstName = null;
       } else {
@@ -163,17 +158,17 @@ function Form() {
       }
     };
   
-    const lastNameChecker = (value) => {
+    const lastNameInput = (value) => {
       if (value.length > 0 && (value.length < 2 || value.length > 20)) {
         errorMessage(
           "lastName",
-          "Le nom de famille doit contenir entre 2 et 20 caractères"
+          "Non valide"
         );
         lastName = null;
       } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
         errorMessage(
           "lastName",
-          "Le nom de famille ne doit pas contenir de caractères spéciaux"
+          "Non valide"
         );
         lastName = null;
       } else {
@@ -182,11 +177,11 @@ function Form() {
       }
     };
   
-    const addressChecker = (value) => {
+    const addressInput = (value) => {
       if (value.length > 0 && (value.length < 2 || value.length > 50)) {
         errorMessage(
           "address",
-          "L'adresse doit contenir entre 2 et 20 caractères"
+          "Non valide"
         );
         address = null
       }else {
@@ -195,17 +190,17 @@ function Form() {
       }
     }
   
-    const cityChecker = (value) => {
+    const cityInput = (value) => {
       if (value.length > 0 && (value.length < 2 || value.length > 20)) {
         errorMessage(
           "city",
-          "Le nom de la ville doit contenir entre 2 et 20 caractères"
+          "Non valide"
         );
         city = null
       } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
         errorMessage(
           "city",
-          "Le nom de la ville ne doit pas contenir de caractères spéciaux"
+          "Non valide"
         );
         city = null;
       } else {
@@ -214,7 +209,7 @@ function Form() {
       }
     };
   
-    const emailChecker = (value) => {
+    const emailInput = (value) => {
       if (!value.match(/^[\w._-]+@[\w-]+\.[a-z]{2,4}$/i)) {
         errorMessage("email", "Le mail n'est pas valide");
         email = null;
@@ -223,92 +218,59 @@ function Form() {
         email = value;
       }
     };
-  
-    // Ecoute des champs du formulaire
-  
+    //--------------------------------------------------
+    // Listening inputs 
     inputs.forEach((input) => {
-      input.addEventListener("input", (e) => {
-        switch (e.target.id) {
-          case "firstName":
-            firstNameChecker(e.target.value);
-  
-            break;
-          case "lastName":
-            lastNameChecker(e.target.value);
-  
-            break;
-          case "address":
-            addressChecker(e.target.value);
-  
-            break;
-          case "city":
-            cityChecker(e.target.value);
-  
-            break;
-          case "email":
-            emailChecker(e.target.value);
-          default:
-            null;
-        }
-      });
-    });
+        input.addEventListener("input", () => {
+            for (let i in inputs){
+                firstNameInput[i] = firstName.value
+                lastNameInput[i] = lastName.value
+                addressInput[i] = address.value
+                cityInput[i] = city.value
+                emailInput[i] = email.value
+            }
+        })
+    })
 }
-Form();
-  
-// Envoi d'une requête POST à l'API
-  
+Form()
+ //------------------------------------------------- 
+// Starting sending Process   
 const sendForm = () => {
-   const orderBtn = document.getElementById("order");
-
-    //Ecouter le bouton submit
-
+   const orderBtn = document.getElementById("order")
     orderBtn.addEventListener("click", (e) => {
         e.preventDefault();
 
         if (product !== null) {
-            let orderProducts = [];
+            let orderProducts = []
             for (let i in product) {
-                orderProducts.push(product[i].userProductId);
+                orderProducts.push(product[i].userProductId)
             }
-
+            //------------------------------------------------------
             // Construction des elements à envoyer
-
-            if (firstName && lastName && address && city && email) {
-                let contact = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    address: address,
-                    city: city,
-                    email: email
-                }
-
-                let products = orderProducts
-                
-                
-                // Requête POST
-
-              
-                fetch("http://localhost:3000/api/products/order", {
-                    method: "POST",
-                    body: JSON.stringify({contact, products}),
-                    headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                    }
-                })
-                .then((res) => res.json())
-                .then((data) => {
-                    // Renvoi de l'orderID dans l'URL
-                    document.location.href = "confirmation.html?id=" + data.orderId;
-                })
-                .catch(function (err) {
-                    console.log("Erreur fetch" + err);
-                })
-            } 
-            else {
-                alert("Veuillez renseigner le formulaire");
+            let contact = {
+                firstName: firstName,
+                lastName: lastName,
+                address: address,
+                city: city,
+                email: email
             }
-
+            let products = orderProducts
+            //----------------------------------------------------
+            // Requête POST
+            fetch("http://localhost:3000/api/products/order", {
+                method: "POST",
+                body: JSON.stringify({contact, products}),
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                }
+            })
+            .then((res) => res.json())
+            .then((data) => {
+                // Renvoi de l'orderID dans l'URL
+                document.location.href = "confirmation.html?id=" + data.orderId;
+            })
+            .catch()
         }
     })
 }

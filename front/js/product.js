@@ -1,5 +1,5 @@
 const fetchElement = (Url) => {
-    fetch(Url)
+   fetch(Url)
     .then((res) => res.json())
     .then((data) => {
        displayElement(data);       
@@ -31,7 +31,7 @@ const displayElement = (elementData) => {
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
     myElementQuantity.value = "1"
-    
+    myElementColor.value != ""
 
     myElementImage.src = elementData.imageUrl;
     myElementTitle.textContent = elementData.name;
@@ -63,9 +63,9 @@ const displayElement = (elementData) => {
                 quantity: 1
             })
             console.log(colorAndQuantitySelected)
-
-            if(quantity.value != 0 && quantity.value <= 100){
-                
+            
+            if(elementArray == null){
+                elementArray = []
                 elementArray.push(colorAndQuantitySelected)
                 console.log(elementArray)
                 localStorage.setItem("element",JSON.stringify(elementArray))
@@ -87,19 +87,17 @@ const displayElement = (elementData) => {
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
                         elementArray[i].color != myElementColor.value || 
-                        elementArray[i]._id != elementData._id && elementArray[i].color != ""
+                        elementArray[i]._id != elementData._id
                     ){
                         return(
                             console.log("nouveau"),
                             elementArray.push(colorAndQuantitySelected),
                             localStorage.setItem("element",JSON.stringify(elementArray)),
-                            elementArray = JSON.parse(localStorage.getItem("element"))
-                             
+                            elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
                     }
                 }
-            }
-               
+            }       
         })
         return (
             elementArray = JSON.parse(localStorage.getItem("element"))   
