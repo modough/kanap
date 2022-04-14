@@ -39,15 +39,14 @@ const displayElement = (elementData) => {
     myElementDescription.textContent = elementData.description; 
     myAddToCartButton.id = elementData._id 
     
-    
-    
+   
     elementData.colors.forEach((color) => {
-        let myColorOption = document.createElement("option");
-        myColorOption.innerHTML = `${color}`;
-        myColorOption.value = `${color}`;
-        myElementColor.appendChild(myColorOption);
+        let myColorOption = document.createElement("option")
+        myColorOption.innerHTML = `${color}`
+        myColorOption.value = `${color}`
+        myElementColor.appendChild(myColorOption)
         
-    });
+    })
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
@@ -63,7 +62,7 @@ const displayElement = (elementData) => {
                 quantity: 1
             })
             console.log(colorAndQuantitySelected)
-            
+
             if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)

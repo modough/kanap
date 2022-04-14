@@ -124,116 +124,78 @@ displayCartElement()
 
 //----------------------------------------------
 /* Form  */
-function Form() {
-
-    let inputs = document.querySelectorAll("input");
-    //---------------------------------------------------------
-    // Errors
-    const errorMessage = (tag, message, valid) => {
-      const showErrorMessage = document.querySelector("#" + tag + "ErrorMsg");
-      if (!valid) {
-        showErrorMessage.textContent = message;
-      } else {
-        showErrorMessage.textContent = "";
-      }
-    };
-    //------------------------------------------------------
-    // Validation 
-    const firstNameInput = (value) => {
-      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
-        errorMessage(
-          "firstName",
-          "Non valide"
-        );
-        firstName = null;
-      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
-        errorMessage(
-          "firstName",
-          "Non valide"
-        );
-        firstName = null;
-      } else {
-        errorMessage("firstName", "", true);
-        firstName = value;
-      }
-    };
-  
-    const lastNameInput = (value) => {
-      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
-        errorMessage(
-          "lastName",
-          "Non valide"
-        );
-        lastName = null;
-      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
-        errorMessage(
-          "lastName",
-          "Non valide"
-        );
-        lastName = null;
-      } else {
-        errorMessage("lastName", "", true);
-        lastName = value;
-      }
-    };
-  
-    const addressInput = (value) => {
-      if (value.length > 0 && (value.length < 2 || value.length > 50)) {
-        errorMessage(
-          "address",
-          "Non valide"
-        );
-        address = null
-      }else {
-        errorMessage("address", "", true)
-        address = value
-      }
-    }
-  
-    const cityInput = (value) => {
-      if (value.length > 0 && (value.length < 2 || value.length > 20)) {
-        errorMessage(
-          "city",
-          "Non valide"
-        );
-        city = null
-      } else if (!value.match(/^[a-zA-z0-9_.-]*$/)) {
-        errorMessage(
-          "city",
-          "Non valide"
-        );
-        city = null;
-      } else {
-        errorMessage("city", "", true);
-        city = value;
-      }
-    };
-  
-    const emailInput = (value) => {
-      if (!value.match(/^[\w._-]+@[\w-]+\.[a-z]{2,4}$/i)) {
-        errorMessage("email", "Le mail n'est pas valide");
-        email = null;
-      } else {
-        errorMessage("email", "", true);
-        email = value;
-      }
-    };
-    //--------------------------------------------------
-    // Listening inputs 
-    inputs.forEach((input) => {
-        input.addEventListener("input", () => {
-            for (let i in inputs){
-                firstNameInput[i] = firstName.value
-                lastNameInput[i] = lastName.value
-                addressInput[i] = address.value
-                cityInput[i] = city.value
-                emailInput[i] = email.value
-            }
-        })
+const Form = () => {
+    let form = document.querySelector(".cart__order__form")
+    form.firstName.addEventListener('change', ()=>{
+        validFirstName()    
     })
+    form.lastName.addEventListener('change', ()=>{
+        validlastName(this)     
+    })
+    form.address.addEventListener('change', ()=>{
+        validAddress(this)    
+    })
+    form.city.addEventListener('change', ()=>{
+        validCity(this)   
+    })
+    form.email.addEventListener('change', (e)=>{
+        validEmail(this)        
+    })
+    const validFirstName = (firstNameInput)=>{
+        let errorMessage = document.getElementById("firstNameErrorMsg")
+        firstNameInput = document.getElementById("firstName").value
+        if(!isNaN(firstNameInput)){
+            errorMessage.innerHTML = "Non valide"
+            console.log(firstNameInput)
+        }else{
+            errorMessage.innerHTML = ""
+        }
+        console.log(firstNameInput)
+    }
+    const validlastName = (lastNameInput)=>{
+        lastNameInput = document.getElementById("lastName").value
+        let errorMessage = document.getElementById("lastNameErrorMsg")
+        if(!isNaN(lastNameInput)){
+            errorMessage.innerHTML = "Non valide"
+        }else{
+            errorMessage.innerHTML = ""    
+        }
+    }
+    const validAddress = (addressInput)=>{
+        addressInput = document.getElementById("address").value
+        let errorMessage = document.getElementById("addressErrorMsg")
+        if(addressInput.length > 10){
+            errorMessage.innerHTML = ""
+        }else{
+            errorMessage.innerHTML = "Veuillez renseigner une adresse valide"
+        }
+    }
+    const validCity = (cityInput)=>{
+        cityInput = document.getElementById("city").value
+        let errorMessage = document.getElementById("cityErrorMsg")
+        
+        if(cityInput.length <= 1){
+            errorMessage.innerHTML = "Non valide"
+            console.log(cityInput)
+        }else{
+            errorMessage.innerHTML = ""
+        }
+    }
+    const validEmail = (emailInput)=>{
+        emailInput = document.getElementById("email").value
+        let regexEmailInput = new RegExp(/\S+@\S+\.\S+/).test(emailInput)
+        let errorMessage = document.getElementById("emailErrorMsg")
+        if(regexEmailInput){
+            errorMessage.innerHTML = ""
+        }else{
+            errorMessage.innerHTML = "Non valide"
+        }
+    }    
 }
 Form()
- //------------------------------------------------- 
+
+
+//------------------------------------------------- 
 // Starting sending Process   
 const sendForm = () => {
    const orderBtn = document.getElementById("order")
@@ -243,10 +205,10 @@ const sendForm = () => {
         if (product !== null) {
             let orderProducts = []
             for (let i in product) {
-                orderProducts.push(product[i].userProductId)
+                orderProducts.push(product[i]._id)
             }
             //------------------------------------------------------
-            // Construction des elements à envoyer
+            // build sending elements
             let contact = {
                 firstName: firstName,
                 lastName: lastName,
@@ -256,7 +218,7 @@ const sendForm = () => {
             }
             let products = orderProducts
             //----------------------------------------------------
-            // Requête POST
+            //  sending the elements
             fetch("http://localhost:3000/api/products/order", {
                 method: "POST",
                 body: JSON.stringify({contact, products}),
@@ -267,7 +229,7 @@ const sendForm = () => {
             })
             .then((res) => res.json())
             .then((data) => {
-                // Renvoi de l'orderID dans l'URL
+                // add orderId in url
                 document.location.href = "confirmation.html?id=" + data.orderId;
             })
             .catch()
@@ -275,139 +237,6 @@ const sendForm = () => {
     })
 }
 sendForm();
-
-
-
-/*let form = document.querySelector(".cart__order__form")
-
-form.firstName.addEventListener('change', ()=>{
-    validFirstName()
-    
-})
-form.lastName.addEventListener('change', ()=>{
-    validlastName(this)
-    
-})
-form.address.addEventListener('change', ()=>{
-    validAddress(this)
-    
-})
-form.city.addEventListener('change', ()=>{
-    validCity(this)
-    
-})
-form.email.addEventListener('change', (e)=>{
-    validEmail(this) 
-    
-        
-})
-
-
-
-let firstNameInput = document.getElementById("firstName").value
-const validFirstName = (firstNameInput)=>{
-    let errorMessage = document.getElementById("firstNameErrorMsg")
-    firstNameInput = document.getElementById("firstName").value
-    if(!isNaN(firstNameInput)){
-        errorMessage.innerHTML = "Non valide"
-        console.log(firstNameInput)
-    }else{
-        errorMessage.innerHTML = ""
-    }
-    console.log(firstNameInput)
-}
-let lastNameInput = document.getElementById("lastName").value
-const validlastName = (lastNameInput)=>{
-    lastNameInput = document.getElementById("lastName").value
-    let errorMessage = document.getElementById("lastNameErrorMsg")
-    if(!isNaN(lastNameInput)){
-        errorMessage.innerHTML = "Non valide"
-    }else{
-        errorMessage.innerHTML = ""    
-    }
-}
-let addressInput = document.getElementById("address").value
-const validAddress = (addressInput)=>{
-    addressInput = document.getElementById("address").value
-    let errorMessage = document.getElementById("addressErrorMsg")
-    if(addressInput.length > 10){
-        errorMessage.innerHTML = ""
-    }else{
-        errorMessage.innerHTML = "Veuillez renseigner une adresse valide"
-    }
-}
-let cityInput = document.getElementById("city").value
-const validCity = (cityInput)=>{
-    cityInput = document.getElementById("city").value
-    let errorMessage = document.getElementById("cityErrorMsg")
-    
-    if(cityInput.length <= 1){
-        errorMessage.innerHTML = "Non valide"
-        console.log(cityInput)
-    }else{
-        errorMessage.innerHTML = ""
-    }
-}
-let emailInput = document.getElementById("email").value
-const validEmail = (emailInput)=>{
-    emailInput = document.getElementById("email").value
-    let regexEmailInput = new RegExp(/\S+@\S+\.\S+/).test(emailInput)
-    let errorMessage = document.getElementById("emailErrorMsg")
-    if(regexEmailInput){
-        errorMessage.innerHTML = ""
-    }else{
-        errorMessage.innerHTML = "Non valide"
-    }
-}
-
-let contact = {
-    firstName: firstNameInput,
-    lastName: lastNameInput,
-    address: addressInput,
-    city: cityInput,
-    email: emailInput
-}
-
-
-
-let orderBtn = document.getElementById("order").addEventListener("click", (e)=>{
-    e.preventDefault()
-    fetch("http://localhost:3000/api/products/order", {
-        method: "POST",
-        body: JSON.stringify({contact, products}),
-        Headers: {"content-type": "application/json"}   
-    })
-    .then((res)=>res.json())  
-    .then((data)=>{
-        
-        document.location.href = "confirmation.html?id=" + data.orderId
-    })  
-
-})*/
-
-
-/*let orderId = undefined
-let order = document.getElementById("order")
-order.addEventListener("click", ()=>{
-    order.textContent = "Commande validée"
-    order.style.color = "lightgreen"
-    document.getElementById("orderId").innerHTML = orderId
-    orderId = window.location.search.replace("?", "")
-    fetch("http://localhost:3000/api/products/order",{
-            method: "POST",
-            body: JSON.stringify({contact, products}),
-            Headers: {"content-type": "application/json"}
-        }) 
-        .then((res)=>res.json())  
-        .then((data)=>{
-            return orderId = data.order
-        })  
-    console.log(contact)
-    alert("Commande envoyée")
-    localStorage.clear()
-
-    location.href = "confirmation.html?" + orderId + "#orderId"  
-})*/
 
 
 
