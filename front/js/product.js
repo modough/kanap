@@ -30,7 +30,8 @@ const displayElement = (elementData) => {
     myColorDiv.appendChild(myElementColor);
     myQuantityDiv.appendChild(myElementQuantity);
     myButtonDiv.appendChild(myAddToCartButton)
-    myElementQuantity.value = "1"
+    myElementQuantity.value = "0"
+
     
 
     myElementImage.src = elementData.imageUrl;
@@ -50,7 +51,7 @@ const displayElement = (elementData) => {
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
-            myAddToCartButton.innerHTML = "Article ajoutée"    
+            myAddToCartButton.innerHTML = "Article ajouté"    
             myAddToCartButton.style.color = "lightgreen"
             let elementArray = JSON.parse(localStorage.getItem("element"))
             myElementColor = document.getElementById("colors")
@@ -59,11 +60,16 @@ const displayElement = (elementData) => {
 
             const colorAndQuantitySelected = Object.assign({}, elementData,{
                 color: `${myElementColor.value}`,
-                quantity: 1
+                quantity:`${myElementQuantity.value}`
             })
             console.log(colorAndQuantitySelected)
-
-            if(elementArray == null){
+            if(colorAndQuantitySelected.color == "" || 
+            colorAndQuantitySelected.quantity <= 0 || colorAndQuantitySelected.quantity == ""){
+                return(alert("Veuillez remplir tous les champs")),
+                myAddToCartButton.innerHTML = "Ajouter au panier",   
+                myAddToCartButton.style.color = "white"
+            }
+            else if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)
                 console.log(elementArray)

@@ -59,7 +59,7 @@ const displayCartElement = () => {
             cartElementImage.src = elementFromLocalStorage[i].imageUrl
             cartElementName.textContent = elementFromLocalStorage[i].name
             cartElementColor.innerHTML = elementFromLocalStorage[i].color
-            cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " "+"€"
+            cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " €"
             cartQuantityInput.value = elementFromLocalStorage[i].quantity      
         } 
         grandTotal(elementFromLocalStorage)   
@@ -71,7 +71,7 @@ const displayCartElement = () => {
 // add or dim articles's quantity using up and down input arrow
 const changeQuantity = () =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity")
-    addQuantityButton.forEach( (moreQuantity, index) => {
+    addQuantityButton.forEach((moreQuantity, index) => {
         moreQuantity.addEventListener("change", ()=>{
             const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
             articlesFromLocalStorage[index].quantity = moreQuantity.value     
@@ -86,7 +86,7 @@ const grandTotal = (articles) => {
     let totalQuantity = 0
     let totalPrice = 0
     for (item of articles) {
-      totalQuantity += parseInt(item.quantity)
+      totalQuantity += Number(item.quantity)
       totalPrice += item.price * item.quantity
     }
     document.querySelector("#totalQuantity").innerHTML = totalQuantity
@@ -167,13 +167,12 @@ const Form = () => {
         if(addressInput.length > 10){
             errorMessage.innerHTML = ""
         }else{
-            errorMessage.innerHTML = "Veuillez renseigner une adresse valide"
+            errorMessage.innerHTML = "Non valide"
         }
     }
     const validCity = (cityInput)=>{
         cityInput = document.getElementById("city").value
         let errorMessage = document.getElementById("cityErrorMsg")
-        
         if(cityInput.length <= 1){
             errorMessage.innerHTML = "Non valide"
             console.log(cityInput)
@@ -193,8 +192,6 @@ const Form = () => {
     }    
 }
 Form()
-
-
 //------------------------------------------------- 
 // Start sending Process   
 const sendForm = () => {
@@ -202,39 +199,41 @@ const sendForm = () => {
     orderBtn.addEventListener("click", (e) => {
         e.preventDefault();
 
-        if (product !== null) {
-            let orderProducts = []
-            for (let i in product) {
-                orderProducts.push(product[i]._id)
-            }
-            //------------------------------------------------------
-            // build elements to send
-            let contact = {
-                firstName: firstName,
-                lastName: lastName,
-                address: address,
-                city: city,
-                email: email
-            }
-            let products = orderProducts
-           
-            //----------------------------------------------------
-            //  sending elements
-            fetch("http://localhost:3000/api/products/order", {
-                method: "POST",
-                body: JSON.stringify({contact, products}),
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                }
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                // add orderId in url
-                document.location.href = "confirmation.html?id=" + data.orderId
-            })
-            .catch()
+        
+        //-----------------------------
+        // build bought articles as data
+        
+        
+        const products = JSON.parse(localStorage.getItem("element")).map((product) => product._id)
+        
+        //------------------------------------------------------
+        // build contact to send as data
+        let contact = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value
         }
+        //----------------------------------------------------
+        //  sending elements
+        fetch("http://localhost:3000/api/products/order", {
+            method: "POST",
+            body: JSON.stringify({contact, products}),
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log(data) 
+            //---------------------------------
+            // add orderId in url
+            document.location.href = "confirmation.html?id=" + data.orderId
+        })
+        .catch()
+        
     })
 }
 sendForm();
