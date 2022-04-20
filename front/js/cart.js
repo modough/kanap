@@ -73,10 +73,10 @@ const changeQuantity = () =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity")
     addQuantityButton.forEach((moreQuantity, index) => {
         moreQuantity.addEventListener("change", ()=>{
-            const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
-            articlesFromLocalStorage[index].quantity = moreQuantity.value     
-            localStorage.setItem("element",JSON.stringify(articlesFromLocalStorage))
-            grandTotal(articlesFromLocalStorage)
+            const articlesInLocalStorage = JSON.parse(localStorage.getItem("element"))
+            articlesInLocalStorage[index].quantity = moreQuantity.value     
+            localStorage.setItem("element",JSON.stringify(articlesInLocalStorage))
+            grandTotal(articlesInLocalStorage)
         })                   
     })
 }
@@ -97,20 +97,14 @@ const grandTotal = (articles) => {
 let product = []
 const removeArticle =  () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
-    console.log(removeArticleButton)
     removeArticleButton.forEach((btn)=>{
         btn.addEventListener("click", ()=>{
-            alert("Article supprimé")
-            console.log(btn)
-            
-            const articlesFromLocalStorage = JSON.parse(localStorage.getItem("element"))
-            product = articlesFromLocalStorage.filter(element => {
+            articlesInLocalStorage = JSON.parse(localStorage.getItem("element"))
+            product = articlesInLocalStorage.filter(element => {
                 if(btn.dataset.id != element._id || btn.dataset.color != element.color){
                     return true   
                 }
-            })
-            console.log(product)  
-            console.log("remove the clicked article")   
+            })   
             btn.closest("article").remove()
             localStorage.setItem("element", JSON.stringify(product))
             
@@ -145,12 +139,10 @@ const Form = () => {
         let errorMessage = document.getElementById("firstNameErrorMsg")
         firstNameInput = document.getElementById("firstName").value
         if(!isNaN(firstNameInput)){
-            errorMessage.innerHTML = "Non valide"
-            console.log(firstNameInput)
+            errorMessage.innerHTML = "Non valide"    
         }else{
             errorMessage.innerHTML = ""
-        }
-        console.log(firstNameInput)
+        }    
     }
     const validlastName = (lastNameInput)=>{
         lastNameInput = document.getElementById("lastName").value
@@ -173,9 +165,8 @@ const Form = () => {
     const validCity = (cityInput)=>{
         cityInput = document.getElementById("city").value
         let errorMessage = document.getElementById("cityErrorMsg")
-        if(cityInput.length <= 1){
+        if(!isNaN(cityInput) && cityInput.length <= 2){
             errorMessage.innerHTML = "Non valide"
-            console.log(cityInput)
         }else{
             errorMessage.innerHTML = ""
         }
@@ -226,8 +217,7 @@ const sendForm = () => {
             }
         })
         .then((res) => res.json())
-        .then((data) => {
-            console.log(data) 
+        .then((data) => { 
             //---------------------------------
             // add orderId in url
             document.location.href = "confirmation.html?id=" + data.orderId
