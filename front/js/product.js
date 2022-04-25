@@ -54,38 +54,40 @@ const displayElement = (elementData) => {
             myAddToCartButton.style.color = "lightgreen"
             let elementArray = JSON.parse(localStorage.getItem("element"))
             myElementColor = document.getElementById("colors")
+            //--------------------------------
+            // add color and quantity value
             const colorAndQuantitySelected = Object.assign({}, elementData,{
                 color: `${myElementColor.value}`,
-                quantity:`${myElementQuantity.value}`
+                quantity:`${myElementQuantity.value}`    
             })
+            
             if(colorAndQuantitySelected.color == "" || 
             colorAndQuantitySelected.quantity <= 0 || colorAndQuantitySelected.quantity == ""){
                 myAddToCartButton.innerHTML = "Choisir options"  
-                myAddToCartButton.style.color = "red"
+                myAddToCartButton.style.color = "grey"
             }
             else if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)
                 localStorage.setItem("element",JSON.stringify(elementArray))
-            }else if (elementArray != null){
+            }
+            else if (elementArray != null){
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
-                        elementArray[i].color == myElementColor.value
-
-                        ){return(
-                            //--------------------------
-                            // on change juste la quantite
-                            elementArray[i].quantity++,
-                            localStorage.setItem("element", JSON.stringify(elementArray)),
-                            elementArray = JSON.parse(localStorage.getItem("element"))    
+                        elementArray[i].color == myElementColor.value){
+                        return(
+                        //--------------------------
+                        // quantity incremented
+                        elementArray[i].quantity++,
+                        localStorage.setItem("element", JSON.stringify(elementArray)),
+                        elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
                     }
                 }
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
                         elementArray[i].color != myElementColor.value || 
-                        elementArray[i]._id != elementData._id
-                    ){
+                        elementArray[i]._id != elementData._id){
                         return(
                             elementArray.push(colorAndQuantitySelected),
                             localStorage.setItem("element",JSON.stringify(elementArray)),

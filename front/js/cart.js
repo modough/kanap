@@ -107,12 +107,13 @@ const removeArticle =  () =>{
             })   
             btn.closest("article").remove()
             localStorage.setItem("element", JSON.stringify(product))
-            
             changeQuantity()
-            grandTotal(product)           
+            grandTotal(product)  
+                     
         })       
     })
-    return 
+    return
+
 }
 displayCartElement()
 
