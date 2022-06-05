@@ -33,8 +33,9 @@ const displayElement = (elementData) => {
     myColorDiv.appendChild(myElementColor)
     myQuantityDiv.appendChild(myElementQuantity)
     myButtonDiv.appendChild(myAddToCartButton)
-    myElementQuantity.value = ""
+    myElementQuantity.value = "1"
     myElementImage.src = elementData.imageUrl
+    myElementImage.alt = elementData.altTxt
     myElementTitle.textContent = elementData.name
     myElementPrice.textContent = elementData.price
     myElementDescription.textContent = elementData.description
@@ -54,6 +55,7 @@ const displayElement = (elementData) => {
             myAddToCartButton.style.color = "lightgreen"
             let elementArray = JSON.parse(localStorage.getItem("element"))
             myElementColor = document.getElementById("colors")
+            
             //--------------------------------
             // add color and quantity value
             const colorAndQuantitySelected = Object.assign({}, elementData,{
@@ -64,13 +66,16 @@ const displayElement = (elementData) => {
             if(colorAndQuantitySelected.color == "" || 
             colorAndQuantitySelected.quantity <= 0 || colorAndQuantitySelected.quantity == ""){
                 myAddToCartButton.innerHTML = "Choisir options"  
-                myAddToCartButton.style.color = "grey"
+                myAddToCartButton.style.color = "grey"  
             }
             else if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)
-                localStorage.setItem("element",JSON.stringify(elementArray))
+                localStorage.setItem("element",JSON.stringify(elementArray))   
             }
+
+            // ---------------------------
+            // produit est ajouté dans le panier avec la même couleur, nombre d’exemplaires ajusté.
             else if (elementArray != null){
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
@@ -84,6 +89,9 @@ const displayElement = (elementData) => {
                         )
                     }
                 }
+
+                // -------------------------------
+                // produit ajouté plusieurs fois mais avec des couleurs différentes, apparition en plusieurs lignes distinctes
                 for(let i in elementArray){
                     if(elementArray[i]._id == elementData._id && 
                         elementArray[i].color != myElementColor.value || 

@@ -74,7 +74,8 @@ const products = [
 ];
 
 exports.find = () => {
-  return new Promise((resolve, reject) => resolve(JSON.parse(JSON.stringify(products))));
+  return new Promise((resolve, reject) => 
+  resolve(JSON.parse(JSON.stringify(products))));
 }
 
 exports.findById = (id) => {

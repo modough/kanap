@@ -25,6 +25,7 @@ const displayItems = (itemsData) => {
         // building next page url using selected article id
         myItemId.href = `./product.html?id=${itemsData[i]._id}`
         myItemImage.src = itemsData[i].imageUrl
+        myItemImage.alt = itemsData[i].altTxt
         myItemName.textContent = itemsData[i].name
         myItemName.className = 'productName'
         myItemParagraph.textContent = itemsData[i].description

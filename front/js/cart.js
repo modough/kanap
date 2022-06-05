@@ -108,7 +108,16 @@ const removeArticle =  () =>{
             btn.closest("article").remove()
             localStorage.setItem("element", JSON.stringify(product))
             changeQuantity()
-            grandTotal(product)  
+            grandTotal(product) 
+            let cartElementSection = document.getElementById("cart__items") 
+            let cartElementText = document.createElement("h3")
+            cartElementSection.append(cartElementText)
+            cartElementText.innerHTML = "Votre panier est vide !"
+            cartElementText.style.display = "flex"
+            cartElementText.style.justifyContent = "center"
+            localStorage.clear()
+            
+            
                      
         })       
     })
@@ -122,7 +131,7 @@ displayCartElement()
 const Form = () => {
     let form = document.querySelector(".cart__order__form")
     form.firstName.addEventListener('change', ()=>{
-        validFirstName()    
+        validFirstName(this)    
     })
     form.lastName.addEventListener('change', ()=>{
         validlastName(this)     
@@ -139,7 +148,8 @@ const Form = () => {
     const validFirstName = (firstNameInput)=>{
         let errorMessage = document.getElementById("firstNameErrorMsg")
         firstNameInput = document.getElementById("firstName").value
-        if(!isNaN(firstNameInput)){
+        let regexFirstName = new RegExp("^[a-zA-Z]+$").test(firstNameInput)
+        if(!(regexFirstName)){
             errorMessage.innerHTML = "Non valide"    
         }else{
             errorMessage.innerHTML = ""
@@ -148,11 +158,13 @@ const Form = () => {
     const validlastName = (lastNameInput)=>{
         lastNameInput = document.getElementById("lastName").value
         let errorMessage = document.getElementById("lastNameErrorMsg")
-        if(!isNaN(lastNameInput)){
+        let regexLastName = new RegExp("^[a-zA-Z]+$").test(lastNameInput) 
+        if(!(regexLastName)){
             errorMessage.innerHTML = "Non valide"
         }else{
             errorMessage.innerHTML = ""    
         }
+        
     }
     const validAddress = (addressInput)=>{
         addressInput = document.getElementById("address").value
@@ -190,12 +202,8 @@ const sendForm = () => {
    const orderBtn = document.getElementById("order")
     orderBtn.addEventListener("click", (e) => {
         e.preventDefault();
-
-        
         //-----------------------------
         // build bought articles as data
-        
-        
         const products = JSON.parse(localStorage.getItem("element")).map((product) => product._id)
         
         //------------------------------------------------------
