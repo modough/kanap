@@ -1,6 +1,6 @@
 //--------------------------------
 // insert articles from url to main page
-const fetchItems = async (Url) => {
+const fetchItems = async(Url) => {
     await fetch(Url)
     .then((res) => res.json())
     .then((data) => {

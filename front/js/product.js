@@ -4,7 +4,8 @@ const fetchElement = (Url) => {
    fetch(Url)
     .then((res) => res.json())
     .then((data) => {
-       displayElement(data);       
+       displayElement(data)
+             
     })    
 }
 //--------------------------------------
@@ -51,9 +52,13 @@ const displayElement = (elementData) => {
    
     const addToCart = () => {
         myAddToCartButton.addEventListener("click", ()=>{
+            
             myAddToCartButton.innerHTML = "Article ajouté"    
             myAddToCartButton.style.color = "lightgreen"
+            //--------------------------
+            // translate data of the new table in LS
             let elementArray = JSON.parse(localStorage.getItem("element"))
+            
             myElementColor = document.getElementById("colors")
             
             //--------------------------------
@@ -63,33 +68,39 @@ const displayElement = (elementData) => {
                 quantity:`${myElementQuantity.value}`    
             })
             
+            //------------------------
+            // Si couleur non selectionnée ou quantite inferieur ou égale à zéro ou même vide rien ne sera pushé dans le LS
             if(colorAndQuantitySelected.color == "" || 
             colorAndQuantitySelected.quantity <= 0 || colorAndQuantitySelected.quantity == ""){
                 myAddToCartButton.innerHTML = "Choisir options"  
                 myAddToCartButton.style.color = "grey"  
             }
+            //---------------
+            // si LS vide pusher les nouvelles données dans la nouvelle table du LS
             else if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)
+                //--------------------
+                //translate data into json characters for lighter storage
                 localStorage.setItem("element",JSON.stringify(elementArray))   
             }
 
             // ---------------------------
-            // produit est ajouté dans le panier avec la même couleur, nombre d’exemplaires ajusté.
+            // produit ajouté dans le panier avec la même couleur, nombre d’exemplaires ajusté.
             else if (elementArray != null){
                 for(let i in elementArray){
+                    
                     if(elementArray[i]._id == elementData._id && 
-                        elementArray[i].color == myElementColor.value){
+                        elementArray[i].color == myElementColor.value){   
                         return(
                         //--------------------------
                         // quantity incremented
-                        elementArray[i].quantity++,
+                        elementArray[i].quantity+= myElementQuantity.value,
                         localStorage.setItem("element", JSON.stringify(elementArray)),
                         elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
                     }
                 }
-
                 // -------------------------------
                 // produit ajouté plusieurs fois mais avec des couleurs différentes, apparition en plusieurs lignes distinctes
                 for(let i in elementArray){
