@@ -1,10 +1,17 @@
+
+
+
+
 //-------------------------------------------
 // retrieve data from LS
-const displayCartElement = () => {
+const displayCartElement = async () => {
+    
     const elementFromLocalStorage = JSON.parse(localStorage.getItem("element"))
+    
     if(elementFromLocalStorage){
         
         for(let i in elementFromLocalStorage){
+            
             //------------------------------------------------
             // creating elements
             let cartElementArticle = document.createElement("article")
@@ -59,24 +66,43 @@ const displayCartElement = () => {
             cartElementImage.src = elementFromLocalStorage[i].imageUrl
             cartElementName.textContent = elementFromLocalStorage[i].name
             cartElementColor.innerHTML = elementFromLocalStorage[i].color
-            cartElementPrice.innerHTML= elementFromLocalStorage[i].price + " €"
-            cartQuantityInput.value = elementFromLocalStorage[i].quantity      
+            cartQuantityInput.value = elementFromLocalStorage[i].quantity
+            
+            
+            const elementData = await fetchPrice(elementFromLocalStorage[i]._id)
+            cartElementPrice.innerHTML= elementData.price + " €"
+            elementFromLocalStorage[i].price = elementData.price
+                  
         } 
         grandTotal(elementFromLocalStorage)   
         changeQuantity(elementFromLocalStorage) 
-        removeArticle(elementFromLocalStorage)  
+        removeArticle(elementFromLocalStorage) 
+         
     }   
 }
+
+//-----------------------
+// retrieve data from DB and pick the id
+const fetchPrice = async (id) =>{
+    const Url = "http://localhost:3000/api/products/"+ id
+    const dataFromApi = await fetch(Url)
+    .then((res) => res.json())
+    .then((data) => {
+        return data   
+    })
+    return dataFromApi
+}
+
 //---------------------------------------------------------------
 // add or dim articles's quantity using up and down input arrow
-const changeQuantity = () =>{
+const changeQuantity = (articles) =>{
     let addQuantityButton = document.querySelectorAll(".itemQuantity")
+    //-----------------------
+    // foreach execute la fonction callback 1fois pour chaque article
     addQuantityButton.forEach((moreQuantity, index) => {
         moreQuantity.addEventListener("change", ()=>{
-            const articlesInLocalStorage = JSON.parse(localStorage.getItem("element"))
-            articlesInLocalStorage[index].quantity = moreQuantity.value     
-            localStorage.setItem("element",JSON.stringify(articlesInLocalStorage))
-            grandTotal(articlesInLocalStorage)
+            articles[index].quantity = moreQuantity.value   
+            grandTotal(articles)
         })                   
     })
 }
@@ -94,42 +120,41 @@ const grandTotal = (articles) => {
 }
 //-----------------------------------------
 //Remove articles from cart
-let product = []
-const removeArticle =  () =>{
+let _products = []
+const removeArticle = () =>{
     let removeArticleButton = document.querySelectorAll(".deleteItem")
     removeArticleButton.forEach((btn)=>{
-        btn.addEventListener("click", ()=>{
+        btn.addEventListener("click", async ()=>{
             articlesInLocalStorage = JSON.parse(localStorage.getItem("element"))
-            product = articlesInLocalStorage.filter(element => {
+            //------------------
+            // filter() nous retourne un nouveau tableau avec tous les elements du tableau d'origine
+            _products = articlesInLocalStorage.filter(element => {
                 if(btn.dataset.id != element._id || btn.dataset.color != element.color){
                     return true   
                 }
             })   
             btn.closest("article").remove()
-            localStorage.setItem("element", JSON.stringify(product))
+            localStorage.setItem("element", JSON.stringify(_products))
             changeQuantity()
-            grandTotal(product) 
-            let cartElementSection = document.getElementById("cart__items") 
-            let cartElementText = document.createElement("h3")
-            cartElementSection.append(cartElementText)
-            cartElementText.innerHTML = "Votre panier est vide !"
-            cartElementText.style.display = "flex"
-            cartElementText.style.justifyContent = "center"
-            localStorage.clear()
-            
-            
-                     
+
+            for (product of _products) {
+                const productFromApi = await fetchPrice(product._id)
+                product.price = productFromApi.price
+            }
+            grandTotal(_products)                 
         })       
     })
     return
 
 }
+
 displayCartElement()
 
 //----------------------------------------------
 /* Form  */
 const Form = () => {
     let form = document.querySelector(".cart__order__form")
+
     form.firstName.addEventListener('change', ()=>{
         validFirstName(this)    
     })
@@ -142,7 +167,7 @@ const Form = () => {
     form.city.addEventListener('change', ()=>{
         validCity(this)   
     })
-    form.email.addEventListener('change', (e)=>{
+    form.email.addEventListener('change', ()=>{
         validEmail(this)        
     })
     const validFirstName = (firstNameInput)=>{

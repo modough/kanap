@@ -65,7 +65,10 @@ const displayElement = (elementData) => {
             // add color and quantity value
             const colorAndQuantitySelected = Object.assign({}, elementData,{
                 color: `${myElementColor.value}`,
-                quantity:`${myElementQuantity.value}`    
+                quantity:`${myElementQuantity.value}`,
+                price: ""
+               
+                  
             })
             
             //------------------------
@@ -80,9 +83,10 @@ const displayElement = (elementData) => {
             else if(elementArray == null){
                 elementArray = []
                 elementArray.push(colorAndQuantitySelected)
+
                 //--------------------
                 //translate data into json characters for lighter storage
-                localStorage.setItem("element",JSON.stringify(elementArray))   
+                localStorage.setItem("element",JSON.stringify(elementArray))     
             }
 
             // ---------------------------
@@ -95,7 +99,7 @@ const displayElement = (elementData) => {
                         return(
                         //--------------------------
                         // quantity incremented
-                        elementArray[i].quantity+= myElementQuantity.value,
+                        elementArray[i].quantity++,
                         localStorage.setItem("element", JSON.stringify(elementArray)),
                         elementArray = JSON.parse(localStorage.getItem("element"))    
                         )
